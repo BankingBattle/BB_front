@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-gray-100;
+}
+
+nav {
+  @apply bg-white flex items-center justify-center p-2 shadow-sm;
+}
+
+nav a {
+  @apply text-gray-600 mx-5 px-5 py-2 transition-colors hover:text-black;
+}
+
+main {
+  @apply py-10 container mx-auto;
+}
+
+.active {
+  @apply text-black rounded-md;
+}
+
+form {
+  @apply flex flex-col;
+}
+
+label {
+  @apply m-1 flex flex-col;
+}
+
+input[type='text'],
+input[type='password'] {
+  @apply my-1 px-3 py-2 rounded-md;
+}
+
+button {
+  @apply mx-1 my-1 px-3 py-2 rounded-md transition-colors;
+}
