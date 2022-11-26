@@ -20,6 +20,13 @@ function App() {
         >
           {t('Sign In')}
         </NavLink>
+
+        <NavLink
+          className={({ isActive }) => (isActive ? 'active' : '')}
+          to="/register"
+        >
+          {t('Sign Up')}
+        </NavLink>
       </nav>
       <main>
         <Outlet />
