@@ -11,7 +11,7 @@ export function Header() {
       <div className="p-3 lg:px-0 bg-white z-10 whitespace-nowrap flex flex-grow items-center lg:justify-start justify-center">
         <NavLink className="text-2xl text-black font-bold inline-flex" to="/">
           <img className="w-10" src={logoSrc} />
-          <span className="text-[#0F536A]">Banking</span>
+          Banking
           <span className="text-[#F98A2F]">Battle</span>
         </NavLink>
       </div>
