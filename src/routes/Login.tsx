@@ -15,7 +15,7 @@ function Login() {
   return (
     <Form
       method="post"
-      className="w-96 mx-auto bg-white p-5 rounded-xl shadow-sm"
+      className="lg:w-96 mx-auto bg-white p-5 lg:rounded-2xl shadow-sm"
     >
       <label htmlFor="login">
         {t('Login')}:

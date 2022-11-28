@@ -2,20 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply bg-gray-100;
-}
-
-nav {
-  @apply bg-white flex items-center justify-center p-2 shadow-sm;
+body,
+html,
+#root {
+  @apply bg-gray-100 w-full min-h-screen;
 }
 
 nav a {
   @apply text-gray-600 mx-5 px-5 py-2 transition-colors hover:text-black;
-}
-
-main {
-  @apply py-10 container mx-auto;
 }
 
 .active {
