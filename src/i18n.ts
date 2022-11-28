@@ -8,7 +8,9 @@ const resources = {
       Home: 'Главная страница',
       Login: 'Логин',
       Password: 'Пароль',
-      'Sign In': 'Войти',
+      'Sign In': 'Вход',
+      'Sign Up': 'Регистрация',
+      'Confirm password': 'Подтвержение пароля',
     },
   },
 };
