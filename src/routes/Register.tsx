@@ -4,7 +4,9 @@ import { Form, ActionFunctionArgs, redirect } from 'react-router-dom';
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   alert(
-    `Login: ${formData.get('login')}\nEmail: ${formData.get('email')}\nPassword: ${formData.get('password')}`
+    `Login: ${formData.get('login')}\nEmail: ${formData.get(
+      'email'
+    )}\nPassword: ${formData.get('password')}`
   );
   return redirect('/register');
 }
@@ -12,11 +14,10 @@ export async function action({ request }: ActionFunctionArgs) {
 function Register() {
   const { t } = useTranslation();
 
-
   return (
     <Form
       method="post"
-      className="w-96 mx-auto bg-white p-5 rounded-xl shadow-sm"
+      className="lg:w-96 mx-auto bg-white p-5 lg:rounded-2xl shadow-sm"
     >
       <label htmlFor="email">
         {t('Email')}:

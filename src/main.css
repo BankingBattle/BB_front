@@ -8,24 +8,8 @@ html,
   @apply bg-gray-100 w-full min-h-screen;
 }
 
-header {
-  @apply bg-white flex flex-wrap lg:flex items-center justify-center shadow-sm lg:px-64 box-border w-full;
-}
-
-nav {
-  @apply overflow-hidden mt-[-100%] lg:h-full lg:mt-0 flex flex-col lg:flex-row items-center transition-all bg-transparent lg:w-auto w-full;
-}
-
-.burger:focus-within ~ nav {
-  @apply mt-0;
-}
-
 nav a {
   @apply text-gray-600 mx-5 px-5 py-2 transition-colors hover:text-black;
-}
-
-main {
-  @apply py-10 container mx-auto;
 }
 
 .active {

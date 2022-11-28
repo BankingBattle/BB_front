@@ -5,7 +5,7 @@ function App() {
   return (
     <>
       <Header />
-      <main>
+      <main className="py-10 container mx-auto">
         <Outlet />
       </main>
     </>

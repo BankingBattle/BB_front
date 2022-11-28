@@ -1,28 +1,28 @@
 import { useTranslation } from 'react-i18next';
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
-import logoSrc from './logo.jpg';
+import logoSrc from './logo.svg';
 
 export function Header() {
   const { t } = useTranslation();
 
   return (
-    <header>
-      <NavLink
-        className="text-[1.4rem] p-3 lg:px-0 bg-white z-10 whitespace-nowrap flex-grow font-semibold flex items-center text-black"
-        to="/"
-      >
-        <img className="w-12" src={logoSrc} />
-        Banking Battle
-      </NavLink>
+    <header className="bg-white flex flex-wrap lg:flex items-center justify-center shadow-sm lg:px-64 box-border w-full">
+      <div className="p-3 lg:px-0 bg-white z-10 whitespace-nowrap flex flex-grow items-center lg:justify-start justify-center">
+        <NavLink className="text-2xl text-black font-bold inline-flex" to="/">
+          <img className="w-10" src={logoSrc} />
+          <span className="text-[#0F536A]">Banking</span>
+          <span className="text-[#F98A2F]">Battle</span>
+        </NavLink>
+      </div>
       <a
         tabIndex={0}
         type="button"
-        className="burger m-3 lg:hidden text-[1.5rem]"
+        className="burger peer lg:hidden text-[1.5rem] absolute top-0 right-0 pt-2 pb-3 px-3 z-20"
       >
         ☰
       </a>
-      <nav>
+      <nav className="peer-focus-within:mt-0 overflow-hidden -mt-[100%] lg:h-full lg:mt-0 flex flex-col lg:flex-row items-center transition-all bg-transparent lg:w-auto w-full">
         <NavLink
           className={({ isActive }) => (isActive ? 'active' : '')}
           to="/"
