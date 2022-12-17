@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { createContext, Dispatch, SetStateAction } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './routes/App';
 import Home from './routes/Home';
 import Login, { action as loginAction } from './routes/Login';
 import Register, {action as registerAction} from './routes/Register';
+import TeamProfile from './routes/TeamProfile';
 import Error from './routes/Error';
 import {
   createRoutesFromElements,
@@ -23,6 +24,7 @@ const router = createBrowserRouter(
         <Route index element={<Home />} />
         <Route path="login" element={<Login />} action={loginAction} />
         <Route path="register" element={<Register />} action={registerAction} />
+        <Route path="team" element={<TeamProfile />} />
       </Route>
     </Route>
   )
