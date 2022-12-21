@@ -22,7 +22,7 @@ function App() {
   return (
     <AuthCtx.Provider value={{isAuth, nickname, setAuth, setNickname}}>
       <Header />
-      <main className="py-10 container mx-auto">
+      <main className="py-10 container mx-auto flex flex-col">
         <Outlet />
       </main>
     </AuthCtx.Provider>
