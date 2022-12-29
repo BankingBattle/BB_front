@@ -18,4 +18,4 @@ jobs:
             cd /home/developer/deploy/BB_front/
             git pull 
             npm i && npm run build
-            cp ./dist/* /home/developer/deploy/front/static
+            cp -r ./dist/* /home/developer/deploy/front/static
