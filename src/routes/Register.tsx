@@ -1,66 +1,114 @@
 import { useTranslation } from 'react-i18next';
-import { Form, ActionFunctionArgs, redirect } from 'react-router-dom';
+import { Form, ActionFunctionArgs, NavLink, redirect } from 'react-router-dom';
+import { z } from 'zod';
+import { api, query, register } from '../api';
+import { queryClient } from '../main';
 
 export async function action({ request }: ActionFunctionArgs) {
-  const formData = await request.formData();
-  alert(
-    `Login: ${formData.get('login')}\nEmail: ${formData.get(
-      'email'
-    )}\nPassword: ${formData.get('password')}`
-  );
-  return redirect('/register');
+  const data = Object.fromEntries(await request.formData()) as z.infer<
+    typeof register
+  >;
+
+  queryClient.fetchQuery({
+    queryFn: () => api.register(data),
+    queryKey: query.getKeyByAlias('me'),
+  });
+
+  redirect('/');
 }
 
 function Register() {
   const { t } = useTranslation();
 
   return (
-    <Form
-      method="post"
-      className="lg:w-96 mx-auto bg-white p-5 lg:rounded-2xl shadow-sm"
-    >
-      <label htmlFor="email">
-        {t('Email')}:
-        <input
-          type="text"
-          name="email"
-          id="email"
-          placeholder={t('Email')}
-          className="bg-gray-100"
-        />
-      </label>
-      <label htmlFor="login">
-        {t('Login')}:
-        <input
-          type="text"
-          name="login"
-          id="login"
-          placeholder={t('Login')}
-          className="bg-gray-100"
-        />
-      </label>
-      <label>
-        {t('Password')}:
-        <input
-          type="password"
-          name="password"
-          placeholder={t('Password')}
-          className="bg-gray-100"
-        />
-      </label>
-      <label>
-        {t('Confirm password')}:
-        <input
-          type="password"
-          name="confirm_password"
-          placeholder={t('Confirm password')}
-          className="bg-gray-100"
-        />
-      </label>
-      <button type="submit" className="bg-gray-100 hover:bg-gray-200">
-        {t('Sign Up')}
-      </button>
-    </Form>
+    <>
+      <h1 className="lg:text-5xl self-center lg:w-1/3 font-semibold text-center">
+        {t('Register for Banking Battle')}
+      </h1>
+      <Form
+        method="post"
+        className="lg:w-1/2 w-full mx-auto p-5 flex flex-col items-center"
+      >
+        <fieldset className="flex flex-col lg:flex-row w-full">
+          <label htmlFor="first_name" className="w-full m-1">
+            {t('First name')}
+            <input
+              type="text"
+              name="first_name"
+              id="first_name"
+              placeholder={t('Your first name')}
+              className="block w-full bg-white border-gray-100 border-2"
+            />
+          </label>
+          <label htmlFor="last_name" className="w-full m-1">
+            {t('Last name')}
+            <input
+              type="text"
+              name="last_name"
+              id="last_name"
+              placeholder={t('Your last name')}
+              className="block w-full bg-white border-gray-100 border-2"
+            />
+          </label>
+        </fieldset>
+        <label htmlFor="login" className="w-full m-1">
+          {t('Login')}
+          <span className="text-red-500 inline"> *</span>
+          <input
+            required
+            type="text"
+            name="login"
+            id="login"
+            placeholder={t('Enter nickname')}
+            className="block w-full bg-white border-gray-100 border-2"
+          />
+        </label>
+        <label htmlFor="email" className="w-full m-1">
+          {t('Email')}
+          <span className="text-red-500 inline"> *</span>
+          <input
+            required
+            type="text"
+            name="email"
+            id="email"
+            placeholder={t('Enter your e-mail')}
+            className="block w-full bg-white border-gray-100 border-2"
+          />
+        </label>
+        <label htmlFor="password" className="w-full m-1">
+          {t('Password')}
+          <span className="text-red-500 inline"> *</span>
+          <input
+            required
+            type="password"
+            name="password"
+            placeholder={t('Password')}
+            className="block w-full bg-white border-gray-100 border-2"
+          />
+        </label>
+        <label htmlFor="confirm_password" className="w-full m-1">
+          {t('Confirm password')}
+          <span className="text-red-500 inline"> *</span>
+          <input
+            required
+            type="password"
+            name="confirm_password"
+            placeholder={t('Confirm password')}
+            className="block w-full bg-white border-gray-100 border-2"
+          />
+        </label>
+        <button
+          type="submit"
+          className="lg:w-96 w-full my-8 bg-purple-500 hover:bg-purple-600 text-white"
+        >
+          {t('Sign up')}
+        </button>
+      </Form>
+      <div className="text-center">
+        {t('Already have an account? ')}
+        <NavLink to="/login">{t('Log in')}</NavLink>
+      </div>
+    </>
   );
 }
 

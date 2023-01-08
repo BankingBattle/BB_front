@@ -5,7 +5,7 @@
 body,
 html,
 #root {
-  @apply bg-gray-100 w-full min-h-screen;
+  @apply w-full min-h-screen;
 }
 
 nav a {
@@ -20,10 +20,6 @@ form {
   @apply flex flex-col;
 }
 
-label {
-  @apply m-1 flex flex-col;
-}
-
 input[type='text'],
 input[type='password'] {
   @apply my-1 px-3 py-2 rounded-md;
@@ -31,4 +27,8 @@ input[type='password'] {
 
 button {
   @apply mx-1 my-1 px-3 py-2 rounded-md transition-colors;
+}
+
+a {
+  @apply text-purple-500;
 }
