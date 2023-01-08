@@ -1,9 +1,9 @@
-import React, { createContext, Dispatch, SetStateAction } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './routes/App';
+import App, { loader as appLoader } from './routes/App';
 import Home from './routes/Home';
 import Login, { action as loginAction } from './routes/Login';
-import Register, {action as registerAction} from './routes/Register';
+import Register, { action as registerAction } from './routes/Register';
 import TeamProfile from './routes/TeamProfile';
 import Error from './routes/Error';
 import {
@@ -12,14 +12,22 @@ import {
   Route,
   RouterProvider,
 } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
+export const queryClient = new QueryClient();
 
 import './i18n';
 import './main.css';
 
-
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<App />} errorElement={<Error />}>
+    <Route
+      path="/"
+      element={<App />}
+      loader={appLoader}
+      errorElement={<Error />}
+    >
       <Route errorElement={<Error />}>
         <Route index element={<Home />} />
         <Route path="login" element={<Login />} action={loginAction} />
@@ -32,6 +40,9 @@ const router = createBrowserRouter(
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} />
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   </React.StrictMode>
 );

@@ -6,6 +6,7 @@ const resources = {
   ru: {
     translation: {
       Home: 'Главная страница',
+      Profile: 'Личный кабинет',
       Login: 'Логин',
       Password: 'Пароль',
       'Log in': 'Войти',
@@ -15,9 +16,9 @@ const resources = {
       'Log in to Banking Battle': 'Вход в Битву Банков',
       'First name': 'Имя',
       'Last name': 'Фамилия',
-      'Email': 'Почта',
+      Email: 'Почта',
       'Already have an account? ': 'Уже есть аккаунт? ',
-      'Don\'t have an account? ': 'Нет аккаунта? ',
+      "Don't have an account? ": 'Нет аккаунта? ',
       'Forgot password?': 'Забыли пароль?',
       'Enter login': 'Введите логин',
       'Enter nickname': 'Придумайте логин',

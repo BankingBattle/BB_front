@@ -1,26 +1,18 @@
 import { useTranslation } from 'react-i18next';
 import { Form, ActionFunctionArgs, NavLink, redirect } from 'react-router-dom';
+import { z } from 'zod';
+import { api, query, register } from '../api';
+import { queryClient } from '../main';
 
 export async function action({ request }: ActionFunctionArgs) {
-  const formData = await request.formData();
+  const data = Object.fromEntries(await request.formData()) as z.infer<
+    typeof register
+  >;
 
-  const query = {
-    first_name: formData.get('first_name'),
-    last_name: formData.get('last_name'),
-    email: formData.get('email'),
-    login: formData.get('login'),
-    password: formData.get('password'),
-  } as const;
-
-  const result = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/register`, {
-    method: 'POST',
-    body: JSON.stringify(query),
-    headers: {
-      'Content-Type': 'application/json'
-    },
-  }).then(request => request.json());
-
-  console.log(result);
+  queryClient.fetchQuery({
+    queryFn: () => api.register(data),
+    queryKey: query.getKeyByAlias('me'),
+  });
 
   redirect('/');
 }
@@ -30,7 +22,9 @@ function Register() {
 
   return (
     <>
-      <h1 className="lg:text-5xl self-center lg:w-1/3 font-semibold text-center">{t('Register for Banking Battle')}</h1>
+      <h1 className="lg:text-5xl self-center lg:w-1/3 font-semibold text-center">
+        {t('Register for Banking Battle')}
+      </h1>
       <Form
         method="post"
         className="lg:w-1/2 w-full mx-auto p-5 flex flex-col items-center"
@@ -58,7 +52,8 @@ function Register() {
           </label>
         </fieldset>
         <label htmlFor="login" className="w-full m-1">
-          {t('Login')}<span className="text-red-500 inline"> *</span>
+          {t('Login')}
+          <span className="text-red-500 inline"> *</span>
           <input
             required
             type="text"
@@ -69,7 +64,8 @@ function Register() {
           />
         </label>
         <label htmlFor="email" className="w-full m-1">
-          {t('Email')}<span className="text-red-500 inline"> *</span>
+          {t('Email')}
+          <span className="text-red-500 inline"> *</span>
           <input
             required
             type="text"
@@ -80,7 +76,8 @@ function Register() {
           />
         </label>
         <label htmlFor="password" className="w-full m-1">
-          {t('Password')}<span className="text-red-500 inline"> *</span>
+          {t('Password')}
+          <span className="text-red-500 inline"> *</span>
           <input
             required
             type="password"
@@ -90,7 +87,8 @@ function Register() {
           />
         </label>
         <label htmlFor="confirm_password" className="w-full m-1">
-          {t('Confirm password')}<span className="text-red-500 inline"> *</span>
+          {t('Confirm password')}
+          <span className="text-red-500 inline"> *</span>
           <input
             required
             type="password"
@@ -99,12 +97,16 @@ function Register() {
             className="block w-full bg-white border-gray-100 border-2"
           />
         </label>
-        <button type="submit" className="lg:w-96 w-full my-8 bg-purple-500 hover:bg-purple-600 text-white">
+        <button
+          type="submit"
+          className="lg:w-96 w-full my-8 bg-purple-500 hover:bg-purple-600 text-white"
+        >
           {t('Sign up')}
         </button>
       </Form>
       <div className="text-center">
-        {t('Already have an account? ')}<NavLink to="/login">{t('Log in')}</NavLink>
+        {t('Already have an account? ')}
+        <NavLink to="/login">{t('Log in')}</NavLink>
       </div>
     </>
   );

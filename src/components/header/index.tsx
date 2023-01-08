@@ -1,11 +1,48 @@
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router-dom';
 import { LangChanger } from '../lang_changer';
+import { faUser } from '@fortawesome/free-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import logoSrc from './logo.svg';
 
-export function Header() {
+type Props = {
+  isLoggedIn: boolean;
+};
+
+export function Header({ isLoggedIn }: Props) {
   const { t } = useTranslation();
+
+  const links = useMemo(() => {
+    if (isLoggedIn) {
+      return [
+        {
+          children: (
+            <>
+              <FontAwesomeIcon icon={faUser} /> {t('Profile')}
+            </>
+          ),
+          to: '/me',
+          className: 'text-purple-500',
+        },
+      ];
+    }
+
+    return [
+      {
+        children: t('Log in'),
+        to: '/login',
+        className: 'lg:border-2 border-gray-700',
+      },
+      {
+        children: t('Sign up'),
+        to: '/register',
+        className:
+          'lg:border-2 border-purple-500 lg:bg-purple-500 lg:text-white',
+      },
+    ];
+  }, [isLoggedIn]);
 
   return (
     <header className="flex flex-wrap lg:flex items-center justify-center lg:px-64 box-border w-full">
@@ -24,19 +61,16 @@ export function Header() {
         ☰
       </a>
       <nav className="peer-focus-within:mt-0 overflow-hidden -mt-[100%] lg:h-full lg:mt-0 flex flex-col lg:flex-row items-center transition-all bg-transparent lg:w-auto w-full">
-        <NavLink
-          className={({ isActive }) => `${isActive ? 'active' : ''} h-full block box-border lg:border-2 border-gray-700 rounded-md`}
-          to="/login"
-        >
-          {t('Log in')}
-        </NavLink>
-
-        <NavLink
-          className={({ isActive }) => `${isActive ? 'active' : ''} h-full block box-border lg:border-2 border-purple-500 lg:bg-purple-500 lg:text-white rounded-md`}
-          to="/register"
-        >
-          {t('Sign up')}
-        </NavLink>
+        {links.map(({ className, ...link }) => (
+          <NavLink
+            {...link}
+            className={({ isActive }) =>
+              `${
+                isActive ? 'active' : ''
+              } font-semibold h-full block box-border rounded-md ${className}`
+            }
+          />
+        ))}
         <LangChanger />
       </nav>
     </header>

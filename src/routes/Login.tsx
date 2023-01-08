@@ -1,5 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { Form, ActionFunctionArgs, redirect, NavLink } from 'react-router-dom';
+import { z } from 'zod';
+import { api, login, query } from '../api';
+import { queryClient } from '../main';
 
 type Token = {
   refresh: string;
@@ -7,24 +10,23 @@ type Token = {
 };
 
 export async function action({ request }: ActionFunctionArgs) {
-  const formData = await request.formData();
-  const query = {
-    email: formData.get('email'),
-    password: formData.get('password'),
-  } as const;
+  const data = Object.fromEntries(await request.formData()) as z.infer<
+    typeof login
+  >;
 
-  const result = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/token/`, {
-    method: 'POST',
-    body: JSON.stringify(query),
-    headers: {
-      'Content-Type': 'application/json'
-    },
-  }).then(request => request.json() as unknown as Token);
+  try {
+    const { access, refresh } = await queryClient.fetchQuery({
+      queryFn: () => api.login(data),
+      queryKey: query.getKeyByAlias('login'),
+    });
 
-  localStorage.setItem('access', result.access);
-  localStorage.setItem('refresh', result.refresh);
+    localStorage.setItem('access', access);
+    localStorage.setItem('refresh', refresh);
+  } catch (error) {
+    console.log(error);
+  }
 
-  return redirect('/');
+  redirect('/');
 }
 
 function Login() {
@@ -32,7 +34,9 @@ function Login() {
 
   return (
     <>
-     <h1 className="lg:text-5xl self-center lg:w-1/2 font-semibold text-center">{t('Log in to Banking Battle')}</h1>
+      <h1 className="lg:text-5xl self-center lg:w-1/2 font-semibold text-center">
+        {t('Log in to Banking Battle')}
+      </h1>
       <Form
         method="post"
         className="lg:w-1/2 w-full mx-auto p-5 flex flex-col items-center"
@@ -56,13 +60,17 @@ function Login() {
             className="block w-full bg-white border-gray-100 border-2"
           />
         </label>
-        <button type="submit" className="lg:w-96 w-full mt-8 bg-purple-500 hover:bg-purple-600 text-white">
+        <button
+          type="submit"
+          className="lg:w-96 w-full mt-8 bg-purple-500 hover:bg-purple-600 text-white"
+        >
           {t('Log in')}
         </button>
         <NavLink to="/restore">{t('Forgot password?')}</NavLink>
       </Form>
       <div className="text-center mt-8">
-        {t('Don\'t have an account? ')}<NavLink to="/register">{t('Sign up')}</NavLink>
+        {t("Don't have an account? ")}
+        <NavLink to="/register">{t('Sign up')}</NavLink>
       </div>
     </>
   );
