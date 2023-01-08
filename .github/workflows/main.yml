@@ -1,21 +1,21 @@
 name: node_workflow
 
-on: [push]
+on:
+  push:
+    branches: [$default-branch]
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+
     steps:
-      - name: executing remote ssh commands to deploy
-        uses: appleboy/ssh-action@master
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            whoami
-            cd /home/developer/deploy/BB_front/
-            git pull 
-            npm i && npm run build
-            cp -r ./dist/* /home/developer/deploy/front/static
+          node-version: '18'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build
+      - name: Push to production
+        run: rsync -avz ./dist/ ${{ secrets.USER }}@${{ secrets.HOST }}:/home/developer/deploy/front/static
