@@ -53,6 +53,19 @@ export const apiDefinition = makeApi([
     ],
   },
   {
+    method: 'patch',
+    path: '/register/',
+    alias: 'update',
+    parameters: [
+      {
+        name: 'update',
+        schema: user.partial(),
+        type: 'Body',
+      },
+    ],
+    response: user,
+  },
+  {
     method: 'post',
     path: '/token/',
     alias: 'login',
