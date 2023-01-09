@@ -18,6 +18,7 @@ export function Header({ isLoggedIn }: Props) {
     if (isLoggedIn) {
       return [
         {
+          key: 'me',
           children: (
             <>
               <FontAwesomeIcon icon={faUser} /> {t('Profile')}
@@ -31,18 +32,21 @@ export function Header({ isLoggedIn }: Props) {
 
     return [
       {
+        key: 'login',
         children: t('Log in'),
         to: '/login',
-        className: 'lg:border-2 border-gray-700',
+        className:
+          'lg:border-2 lg:border-gray-600 lg:text-gray-600 lg:hover:text-gray-800 lg:hover:border-gray-800',
       },
       {
+        key: 'register',
         children: t('Sign up'),
         to: '/register',
         className:
-          'lg:border-2 border-purple-500 lg:bg-purple-500 lg:text-white',
+          'lg:border-2 lg:border-purple-500 lg:bg-purple-500 lg:text-white lg:hover:text-white lg:hover:bg-purple-600 lg:hover:border-purple-500',
       },
     ];
-  }, [isLoggedIn]);
+  }, [isLoggedIn, t]);
 
   return (
     <header className="flex flex-wrap lg:flex items-center justify-center lg:px-64 box-border w-full">
@@ -67,7 +71,7 @@ export function Header({ isLoggedIn }: Props) {
             className={({ isActive }) =>
               `${
                 isActive ? 'active' : ''
-              } font-semibold h-full block box-border rounded-md ${className}`
+              } font-semibold mx-5 px-5 py-2 transition-colors rounded-md ${className}`
             }
           />
         ))}

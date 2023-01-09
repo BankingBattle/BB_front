@@ -4,6 +4,7 @@ import App, { loader as appLoader } from './routes/App';
 import Home from './routes/Home';
 import Login, { action as loginAction } from './routes/Login';
 import Register, { action as registerAction } from './routes/Register';
+import Profile, { loader as profileLoader } from './routes/Profile';
 import TeamProfile from './routes/TeamProfile';
 import Error from './routes/Error';
 import {
@@ -32,6 +33,7 @@ const router = createBrowserRouter(
         <Route index element={<Home />} />
         <Route path="login" element={<Login />} action={loginAction} />
         <Route path="register" element={<Register />} action={registerAction} />
+        <Route path="profile" element={<Profile />} loader={profileLoader} />
         <Route path="team" element={<TeamProfile />} />
       </Route>
     </Route>
