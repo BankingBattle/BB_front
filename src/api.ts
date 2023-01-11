@@ -1,17 +1,18 @@
 import { makeApi, Zodios } from '@zodios/core';
 import { ZodiosHooks } from '@zodios/react';
 import { z } from 'zod';
+import { registerError } from './errors';
 
 export const login = z.object({
   email: z.string().email(),
   password: z.string(),
 });
 
-const user = z.object({
+export const user = z.object({
   email: z.string().email(),
   first_name: z.string(),
   last_name: z.string(),
-  login: z.string(),
+  login: z.string().min(3, { message: 'Login must be 3 or more characters' }),
 });
 
 export const register = login.merge(user);
@@ -30,10 +31,6 @@ const verify = z.object({
 
 const token = access.merge(refresh);
 
-const error = z.object({
-  code: z.string(),
-});
-
 export const apiDefinition = makeApi([
   {
     method: 'post',
@@ -47,6 +44,13 @@ export const apiDefinition = makeApi([
       },
     ],
     response: user,
+    errors: [
+      {
+        status: 400,
+        description: 'Register error',
+        schema: registerError,
+      },
+    ],
   },
   {
     method: 'post',
@@ -60,6 +64,13 @@ export const apiDefinition = makeApi([
       },
     ],
     response: token,
+    errors: [
+      {
+        status: 401,
+        description: 'Login error',
+        schema: z.object({ detail: z.string() }),
+      },
+    ],
   },
   {
     method: 'post',
@@ -77,7 +88,7 @@ export const apiDefinition = makeApi([
       {
         status: 401,
         description: 'Invalid token',
-        schema: error,
+        schema: z.object({ detail: z.string() }),
       },
     ],
   },

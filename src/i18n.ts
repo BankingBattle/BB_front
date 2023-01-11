@@ -25,6 +25,16 @@ const resources = {
       'Enter your e-mail': 'Введите адрес вашей электронной почты',
       'Your first name': 'Ваше имя',
       'Your last name': 'Ваша фамилия',
+      'Unknown error': 'Неизвестная ошибка',
+      'Passwords must match': 'Пароли должны совпадать',
+      'No active account found with the given credentials': 'Аккаунт не найден',
+      'Invalid email': 'Неверный E-Mail',
+      'Password must be 8 or more characters':
+        'Пароль не может быть короче 8 символов',
+      'Login must be 3 or more characters':
+        'Логин не может быть короче 3 символов',
+      'Email already exists': 'Пользователь с таким E-Mail уже существует',
+      'Login already exists': 'Пользователь с таким логином уже существует',
     },
   },
 };

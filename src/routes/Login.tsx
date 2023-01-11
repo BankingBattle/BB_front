@@ -1,65 +1,114 @@
+import { ZodiosErrorByAlias } from '@zodios/core';
 import { useTranslation } from 'react-i18next';
-import { Form, ActionFunctionArgs, redirect, NavLink } from 'react-router-dom';
+import {
+  Form,
+  ActionFunctionArgs,
+  redirect,
+  NavLink,
+  useActionData,
+} from 'react-router-dom';
+import Balancer from 'react-wrap-balancer';
 import { z } from 'zod';
-import { api, login, query } from '../api';
+import { api, query } from '../api';
 import { queryClient } from '../main';
+import { isErrorFromAlias } from '@zodios/core';
+import { ZodiosMatchingErrorsByAlias } from '@zodios/core/lib/zodios.types';
 
-type Token = {
-  refresh: string;
-  access: string;
-};
+export const formSchema = z.object({
+  email: z.string().email(),
+  password: z
+    .string()
+    .min(8, { message: 'Password must be 8 or more characters' }),
+});
+
+type Error = z.ZodFormattedError<z.infer<typeof formSchema>, string>;
 
 export async function action({ request }: ActionFunctionArgs) {
-  const data = Object.fromEntries(await request.formData()) as z.infer<
-    typeof login
-  >;
+  const data = formSchema.safeParse(
+    Object.fromEntries(await request.formData())
+  );
+
+  if (!data.success) {
+    return data.error.format();
+  }
 
   try {
     const { access, refresh } = await queryClient.fetchQuery({
-      queryFn: () => api.login(data),
+      queryFn: () => api.login(data.data),
       queryKey: query.getKeyByAlias('login'),
     });
 
     localStorage.setItem('access', access);
     localStorage.setItem('refresh', refresh);
-  } catch (error) {
-    console.log(error);
+  } catch (rawError) {
+    if (isErrorFromAlias(api.api, 'login', rawError)) {
+      const error = rawError as ZodiosMatchingErrorsByAlias<
+        typeof api.api,
+        'login'
+      >;
+
+      if (error.response.status === 401) {
+        const data = error.response.data;
+        return { _errors: [data.detail] } satisfies Error;
+      }
+    }
+
+    return { _errors: ['Unknown error'] } satisfies Error;
   }
 
-  redirect('/');
+  return redirect('/');
 }
 
 function Login() {
+  const errors = (useActionData() as FormError<typeof action>) || {};
   const { t } = useTranslation();
 
   return (
-    <>
-      <h1 className="lg:text-5xl self-center lg:w-1/2 font-semibold text-center">
-        {t('Log in to Banking Battle')}
+    <div className="lg:w-1/3 w-full">
+      <h1 className="lg:text-5xl self-center font-semibold text-center">
+        <Balancer>{t('Log in to Banking Battle')}</Balancer>
       </h1>
-      <Form
-        method="post"
-        className="lg:w-1/2 w-full mx-auto p-5 flex flex-col items-center"
-      >
+      <Form method="post" className="mx-auto p-5 flex flex-col items-center">
         <label htmlFor="email" className="w-full m-1">
           {t('Email')}
           <input
-            type="text"
-            name="email"
+            required
+            type="email"
             id="email"
+            name="email"
             placeholder={t('Enter your e-mail')}
             className="block w-full bg-white border-gray-100 border-2"
           />
         </label>
+        {'email' in errors &&
+          errors.email?._errors.map((error) => (
+            <p key={error} className="text-red-600">
+              {t(error)}
+            </p>
+          ))}
+
         <label htmlFor="password" className="w-full m-1">
           {t('Password')}
           <input
+            required
             type="password"
             name="password"
             placeholder={t('Password')}
             className="block w-full bg-white border-gray-100 border-2"
           />
         </label>
+        {'password' in errors &&
+          errors.password?._errors.map((error) => (
+            <p className="text-red-600">{t(error)}</p>
+          ))}
+
+        {'_errors' in errors &&
+          errors._errors.map((error) => (
+            <p key={error} className="text-red-600">
+              {t(error)}
+            </p>
+          ))}
+
         <button
           type="submit"
           className="lg:w-96 w-full mt-8 bg-purple-500 hover:bg-purple-600 text-white"
@@ -72,7 +121,7 @@ function Login() {
         {t("Don't have an account? ")}
         <NavLink to="/register">{t('Sign up')}</NavLink>
       </div>
-    </>
+    </div>
   );
 }
 
