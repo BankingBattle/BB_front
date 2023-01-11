@@ -25,10 +25,10 @@ export const formSchema = z
       .min(8, { message: 'Password must be 8 or more characters' }),
     confirm_password: z.string(),
   })
-  .refine(
-    ({ password, confirm_password }) => password === confirm_password,
-    'Passwords must match'
-  );
+  .refine(({ password, confirm_password }) => password === confirm_password, {
+    message: 'Passwords must match',
+    path: ['confirm_password'],
+  });
 
 type Error = z.ZodFormattedError<z.infer<typeof formSchema>, string>;
 
@@ -79,7 +79,9 @@ function Register() {
       >
         {'_errors' in errors &&
           errors._errors.map((error) => (
-            <p className="text-red-600">{t(error)}</p>
+            <p key={error} className="text-red-600">
+              {t(error)}
+            </p>
           ))}
 
         <fieldset className="flex flex-col lg:flex-row w-full">
@@ -120,7 +122,9 @@ function Register() {
         </label>
         {'login' in errors &&
           errors.login?._errors.map((error) => (
-            <p className="text-red-600">{t(error)}</p>
+            <p key={error} className="text-red-600">
+              {t(error)}
+            </p>
           ))}
 
         <label htmlFor="email" className="w-full m-1">
@@ -137,7 +141,9 @@ function Register() {
         </label>
         {'email' in errors &&
           errors.email?._errors.map((error) => (
-            <p className="text-red-600">{t(error)}</p>
+            <p key={error} className="text-red-600">
+              {t(error)}
+            </p>
           ))}
 
         <label htmlFor="password" className="w-full m-1">
@@ -154,7 +160,9 @@ function Register() {
         </label>
         {'password' in errors &&
           errors.password?._errors.map((error) => (
-            <p className="text-red-600">{t(error)}</p>
+            <p key={error} className="text-red-600">
+              {t(error)}
+            </p>
           ))}
 
         <label htmlFor="confirm_password" className="w-full m-1">
@@ -171,7 +179,9 @@ function Register() {
         </label>
         {'confirm_password' in errors &&
           errors.confirm_password?._errors.map((error) => (
-            <p className="text-red-600">{t(error)}</p>
+            <p key={error} className="text-red-600">
+              {t(error)}
+            </p>
           ))}
 
         <button

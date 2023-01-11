@@ -69,11 +69,6 @@ function Login() {
         <Balancer>{t('Log in to Banking Battle')}</Balancer>
       </h1>
       <Form method="post" className="mx-auto p-5 flex flex-col items-center">
-        {'_errors' in errors &&
-          errors._errors.map((error) => (
-            <p className="text-red-600">{t(error)}</p>
-          ))}
-
         <label htmlFor="email" className="w-full m-1">
           {t('Email')}
           <input
@@ -87,7 +82,9 @@ function Login() {
         </label>
         {'email' in errors &&
           errors.email?._errors.map((error) => (
-            <p className="text-red-600">{t(error)}</p>
+            <p key={error} className="text-red-600">
+              {t(error)}
+            </p>
           ))}
 
         <label htmlFor="password" className="w-full m-1">
@@ -103,6 +100,13 @@ function Login() {
         {'password' in errors &&
           errors.password?._errors.map((error) => (
             <p className="text-red-600">{t(error)}</p>
+          ))}
+
+        {'_errors' in errors &&
+          errors._errors.map((error) => (
+            <p key={error} className="text-red-600">
+              {t(error)}
+            </p>
           ))}
 
         <button

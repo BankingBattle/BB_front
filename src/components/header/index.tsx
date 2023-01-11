@@ -6,6 +6,7 @@ import { faUser } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import logoSrc from './logo.svg';
+import { queryClient } from '../../main';
 
 type Props = {
   isLoggedIn: boolean;
@@ -24,7 +25,18 @@ export function Header({ isLoggedIn }: Props) {
               <FontAwesomeIcon icon={faUser} /> {t('Profile')}
             </>
           ),
-          to: '/me',
+          to: '/profile',
+          className: 'text-purple-500',
+        },
+        {
+          key: 'logout',
+          children: t('Log out'),
+          onClick: () => {
+            queryClient.clear();
+            localStorage.removeItem('access');
+            localStorage.removeItem('refresh');
+          },
+          to: '/',
           className: 'text-purple-500',
         },
       ];

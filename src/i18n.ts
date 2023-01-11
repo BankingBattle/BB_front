@@ -26,6 +26,7 @@ const resources = {
       'Your first name': 'Ваше имя',
       'Your last name': 'Ваша фамилия',
       'Unknown error': 'Неизвестная ошибка',
+      'Passwords must match': 'Пароли должны совпадать',
       'No active account found with the given credentials': 'Аккаунт не найден',
       'Invalid email': 'Неверный E-Mail',
       'Password must be 8 or more characters':
