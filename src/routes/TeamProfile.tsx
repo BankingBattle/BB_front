@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useContext, useState } from 'react';
 import { Forbidden } from '../components/forbidden';
 import { Team } from '../models/Team';
-import { PlayerItem } from '../components/player_item';
+import { EntityCard } from '../components/entity_card';
 import {
   faPen,
   faRemove,
@@ -139,7 +139,7 @@ function TeamProfile() {
             Team members
             <ul>
               {team.users_in_team.map((player) => (
-                <PlayerItem player={player} />
+                <EntityCard entity={player} applyBtn={false} />
               ))}
             </ul>
             <button
@@ -158,7 +158,7 @@ function TeamProfile() {
             {team.requests ? (
               <ul>
                 {team.requests.map((player, index) => (
-                  <PlayerItem player={player} />
+                  <EntityCard entity={player} />
                 ))}
               </ul>
             ) : (

@@ -1,16 +1,23 @@
 import { User } from '../../models/User';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRemove, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { Team } from '../../models/Team';
+
+type Entity = User | Team
+
+function isUser(value: User | Team): value is User {
+  return value.hasOwnProperty('username')
+}
 
 interface PlayerItemProps {
-  player: User
+  entity: Entity
   cancelBtn?: boolean
   applyBtn?: boolean
   cancelAction?: () => void
   applyAction?: () => void
 }
 
-export function PlayerItem({ player,
+export function EntityCard({ entity,
                              cancelBtn = true,
                              applyBtn = true,
                              cancelAction = () => {},
@@ -28,7 +35,7 @@ export function PlayerItem({ player,
       <div style={{display: 'flex', flexDirection: 'row'}}>
         <div style={{ width: 28, height: 28, borderRadius: 16, backgroundColor: 'black' }} />
         &nbsp;&nbsp;
-        <div>{player.username}</div>
+        <div>{isUser(entity) ? entity.username : entity.name}</div>
       </div>
 
       <div>
