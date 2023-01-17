@@ -9,12 +9,31 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Game } from '../models/Game';
-import { PlayerItem } from '../components/player_item';
+import { EntityCard } from '../components/entity_card';
 
 let game: Game = {
   title: "Test game",
   description: "Смысл игры заключается в том, чтобы At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga"
 }
+
+let teams = [
+  {
+    creator: { username: 'spoon' },
+    name: 'Blue team',
+    state: 'active',
+    users_in_team: [],
+    requests: [{ username: 'brrkvbbb' }],
+    results: [],
+  },
+  {
+    creator: { username: 'andrew' },
+    name: 'Red team',
+    state: 'active',
+    users_in_team: [],
+    requests: [{ username: 'brrkvbbb' }],
+    results: [],
+  }
+]
 
 function GameProfile() {
   const { t } = useTranslation();
@@ -99,7 +118,9 @@ function GameProfile() {
           <hr className="my-4" />
           <h1 className="text-xl">Команды-участники</h1>
           <div>
-            
+            {teams.map(team =>
+              <EntityCard entity={team} applyBtn={false} />
+            )}
           </div>
         </>
       ) : (
