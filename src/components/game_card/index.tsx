@@ -6,7 +6,7 @@ interface GameCardProps {
 export function GameCard({ result } : GameCardProps) {
   return (
     <div className="rounded-xl bg-amber-500 w-24 p-2 m-2">
-      {result.game.name}
+      {result.game.title}
       &nbsp;
       {result.result}
     </div>

@@ -1,3 +1,4 @@
 export type Game = {
-  name: string
+  title: string
+  description: string
 }

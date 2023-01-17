@@ -1,10 +1,11 @@
-import { Player } from './Player';
+import { User } from './User';
 import { GameResult } from './GameResult';
 
 export type Team = {
-  leader: string
+  creator: User
   name: string
-  members: Player[]
-  requests: Player[]
+  state: string
+  users_in_team: User[]
+  requests: User[]
   results: GameResult[]
 }

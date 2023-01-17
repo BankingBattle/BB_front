@@ -6,6 +6,7 @@ import Login, { action as loginAction } from './routes/Login';
 import Register, { action as registerAction } from './routes/Register';
 import Profile, { loader as profileLoader } from './routes/Profile';
 import TeamProfile from './routes/TeamProfile';
+import GameProfile from './routes/GameProfile';
 import Error from './routes/Error';
 import {
   createRoutesFromElements,
@@ -21,6 +22,7 @@ export const queryClient = new QueryClient();
 import './i18n';
 import './main.css';
 
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
@@ -35,6 +37,7 @@ const router = createBrowserRouter(
         <Route path="register" element={<Register />} action={registerAction} />
         <Route path="profile" element={<Profile />} loader={profileLoader} />
         <Route path="team" element={<TeamProfile />} />
+        <Route path="game" element={<GameProfile />} />
       </Route>
     </Route>
   )

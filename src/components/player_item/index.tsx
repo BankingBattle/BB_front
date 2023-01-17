@@ -1,9 +1,9 @@
-import { Player } from '../../models/Player';
+import { User } from '../../models/User';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRemove, faCheck } from '@fortawesome/free-solid-svg-icons';
 
 interface PlayerItemProps {
-  player: Player
+  player: User
   cancelBtn?: boolean
   applyBtn?: boolean
   cancelAction?: () => void
@@ -28,7 +28,7 @@ export function PlayerItem({ player,
       <div style={{display: 'flex', flexDirection: 'row'}}>
         <div style={{ width: 28, height: 28, borderRadius: 16, backgroundColor: 'black' }} />
         &nbsp;&nbsp;
-        <div>{player.nickname}</div>
+        <div>{player.username}</div>
       </div>
 
       <div>

@@ -13,23 +13,24 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { GameCard } from '../components/game_card';
 
 let team: Team = {
-  leader: 'spoon',
+  creator: { username: 'spoon' },
   name: 'Sample team',
-  members: [
-    { nickname: 'jfrow0c' },
-    { nickname: 'elbow89r' },
-    { nickname: 'critenz' },
-    { nickname: 'devilator' },
-    { nickname: 'schinla5' },
+  state: 'active',
+  users_in_team: [
+    { username: 'jfrow0c' },
+    { username: 'elbow89r' },
+    { username: 'critenz' },
+    { username: 'devilator' },
+    { username: 'schinla5' },
   ],
-  requests: [{ nickname: 'brrkvbbb' }],
+  requests: [{ username: 'brrkvbbb' }],
   results: [
     {
-      game: { name: 'Game1' },
+      game: { title: 'Game1', description: 'Lorem ipsum' },
       result: '3',
     },
     {
-      game: { name: 'Game2' },
+      game: { title: 'Game2', description: 'Lorem ipsum' },
       result: '2',
     },
   ],
@@ -137,7 +138,7 @@ function TeamProfile() {
           <div className="my-4">
             Team members
             <ul>
-              {team.members.map((player) => (
+              {team.users_in_team.map((player) => (
                 <PlayerItem player={player} />
               ))}
             </ul>
