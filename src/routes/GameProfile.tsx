@@ -12,7 +12,7 @@ import { Game } from '../models/Game';
 import { EntityCard } from '../components/entity_card';
 
 let game: Game = {
-  title: "Test game",
+  title: "Trial Game",
   description: "Смысл игры заключается в том, чтобы At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga"
 }
 
@@ -49,78 +49,46 @@ function GameProfile() {
   };
 
   return (
-    <div className="lg:w-2/3 mx-auto bg-white p-5 lg:rounded-2xl shadow-sm">
-      {true ? (
+    <div className="lg:w-5/6 mx-auto bg-white p-5 lg:rounded-xl shadow-sm">
+      {t.length == 2 ? (
         <>
-          <div className="flex flex-row my-2 justify-between items-center">
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              {nameEditing ? (
-                <>
-                  <div>
-                    <input
-                      type="text"
-                      value={newName}
-                      onChange={(e) => {
-                        setNewName(e.target.value);
-                        setNameEditingError(!e.target.value);
-                      }}
-                      className={`border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-${
-                        nameEditingError ? 'red' : 'blue'
-                      }-500 focus:border-${
-                        nameEditingError ? 'red' : 'blue'
-                      }-500 block w-full p-2.5`}
-                      placeholder="Team name"
-                    />
-                  </div>
-                  <button
-                    onClick={() => {
-                      setNameEditing(false);
-                      setNewName(game.title);
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faRemove} />
-                  </button>
-                  <button onClick={() => handleNameChange(newName)}>
-                    <FontAwesomeIcon icon={faCheck} />
-                  </button>
-                </>
-              ) : (
-                <>
-                  <h1 className="text-2xl">
-                    <span className="font-light">Игра</span>
-                    &nbsp;
-                    <span className="font-bold">{game.title}</span>
-                  </h1>
-                  <button onClick={() => setNameEditing(true)}>
-                    <FontAwesomeIcon icon={faPen} />
-                  </button>
-                </>
-              )}
-            </div>
-            <div
-              style={{
-                width: 40,
-                height: 40,
-                borderRadius: 16,
-                backgroundColor: 'gray',
-              }}
-            ></div>
-          </div>
+          <h1 className="flex justify-center text-2xl">{game.title}</h1>
+          <div className="flex flex-col w-full mt-5">
+            <div className="flex flex-row w-full">
+              <div className="flex flex-col w-1/3">
 
-          <hr className="my-4" />
-          <p>{game.description}</p>
-          <hr className="my-4" />
-          <h1 className="text-xl">Команды-участники</h1>
-          <div>
-            {teams.map(team =>
-              <EntityCard entity={team} applyBtn={false} />
-            )}
+                <div className="p-5 m-2 lg:rounded-xl shadow-sm bg-gray-100">
+                  <h1 className="flex justify-center text-xl antialiased uppercase">Ваш результат</h1>
+                  <a href="team" className="flex justify-center text-sm">{teams[0].name}</a>
+                  <br/>
+                  <p className="flex justify-center text-sm text-slate-500">
+                    Баллы
+                  </p>
+                  <h1 className="flex justify-center text-5xl">0</h1>
+                  <h2></h2>
+                </div>
+
+                <div className="p-5 m-2 lg:rounded-xl shadow-sm bg-gray-100">
+                  <h1 className="flex justify-center text-xl antialiased uppercase">Лидеры</h1>
+                  <p className="flex justify-center text-sm text-slate-500">
+                    Лидерборд участников соревнования
+                  </p>
+                </div>
+
+              </div>
+
+              <div className="p-5 m-2 lg:rounded-xl shadow-sm bg-gray-100 w-2/3">
+                <h1 className="flex justify-center text-xl antialiased uppercase">Описание</h1>
+                <br/>
+                <p className="text-slate-500">{game.description}</p>
+              </div>
+
+            </div>
+            <div className="flex flex-row justify-between w-full bg-gray-100 shadow-sm lg:rounded-xl p-5 m-2">
+              <p>ID раунда</p>
+              <p>Название раунда</p>
+              <p>Открыть раунд</p>
+            </div>
           </div>
         </>
       ) : (
