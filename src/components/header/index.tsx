@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import logoSrc from './logo.svg';
 import { queryClient } from '../../main';
+import cn from 'classnames';
 
 type Props = {
   isLoggedIn: boolean;
@@ -22,11 +23,12 @@ export function Header({ isLoggedIn }: Props) {
           key: 'me',
           children: (
             <>
-              <FontAwesomeIcon icon={faUser} /> {t('Profile')}
+              <FontAwesomeIcon icon={faUser} />
+              &nbsp;&nbsp;{t('Profile')}
             </>
           ),
           to: '/profile',
-          className: 'text-purple-500',
+          className: 'py-2 lg:mr-20 hover:text-purple-500',
         },
         {
           key: 'logout',
@@ -37,7 +39,7 @@ export function Header({ isLoggedIn }: Props) {
             localStorage.removeItem('refresh');
           },
           to: '/',
-          className: 'text-purple-500',
+          className: 'py-2 lg:mr-20 hover:text-purple-500 text-black',
         },
       ];
     }
@@ -47,22 +49,29 @@ export function Header({ isLoggedIn }: Props) {
         key: 'login',
         children: t('Log in'),
         to: '/login',
-        className:
-          'lg:border-2 lg:border-gray-600 lg:text-gray-600 lg:hover:text-gray-800 lg:hover:border-gray-800',
+        className: cn(
+          'lg:mx-5 lg:px-5 lg:py-2 lg:rounded-md',
+          'lg:border-2 lg:border-gray-600 lg:hover:border-gray-800',
+          'lg:text-gray-600 lg:hover:text-gray-800'
+        ),
       },
       {
         key: 'register',
         children: t('Sign up'),
         to: '/register',
-        className:
-          'lg:border-2 lg:border-purple-500 lg:bg-purple-500 lg:text-white lg:hover:text-white lg:hover:bg-purple-600 lg:hover:border-purple-500',
+        className: cn(
+          'lg:mx-5 lg:px-5 lg:py-2 lg:rounded-md',
+          'lg:bg-purple-500 lg:hover:bg-purple-600',
+          'lg:border-2 lg:border-purple-500 lg:hover:border-purple-500 ',
+          'lg:text-white lg:hover:text-white'
+        ),
       },
     ];
   }, [isLoggedIn, t]);
 
   return (
     <header className="flex flex-wrap lg:flex items-center justify-center lg:px-64 box-border w-full">
-      <div className="p-3 lg:px-0 bg-white z-10 whitespace-nowrap flex flex-grow items-center lg:justify-start justify-center">
+      <div className="p-3 lg:px-0 z-10 whitespace-nowrap flex flex-grow items-center lg:justify-start justify-center">
         <NavLink className="text-2xl text-black font-bold inline-flex" to="/">
           <img className="w-10" src={logoSrc} />
           Banking
@@ -81,9 +90,13 @@ export function Header({ isLoggedIn }: Props) {
           <NavLink
             {...link}
             className={({ isActive }) =>
-              `${
-                isActive ? 'active' : ''
-              } font-semibold mx-5 px-5 py-2 transition-colors rounded-md ${className}`
+              cn(
+                'font-semibold transition-colors',
+                {
+                  'text-purple-500 rounded-md': isActive,
+                },
+                className
+              )
             }
           />
         ))}

@@ -1,10 +1,8 @@
-import { ZodiosErrorByAlias } from '@zodios/core';
 import { useTranslation } from 'react-i18next';
 import {
   Form,
   ActionFunctionArgs,
   redirect,
-  NavLink,
   useActionData,
 } from 'react-router-dom';
 import Balancer from 'react-wrap-balancer';
@@ -13,6 +11,7 @@ import { api, query } from '../api';
 import { queryClient } from '../main';
 import { isErrorFromAlias } from '@zodios/core';
 import { ZodiosMatchingErrorsByAlias } from '@zodios/core/lib/zodios.types';
+import { A } from '../components/A';
 
 export const formSchema = z.object({
   email: z.string().email(),
@@ -64,7 +63,7 @@ function Login() {
   const { t } = useTranslation();
 
   return (
-    <div className="lg:w-1/3 w-full">
+    <div className="lg:w-1/2 w-full">
       <h1 className="lg:text-5xl self-center font-semibold text-center">
         <Balancer>{t('Log in to Banking Battle')}</Balancer>
       </h1>
@@ -115,11 +114,11 @@ function Login() {
         >
           {t('Log in')}
         </button>
-        <NavLink to="/restore">{t('Forgot password?')}</NavLink>
+        <A to="/restore">{t('Forgot password?')}</A>
       </Form>
       <div className="text-center mt-8">
         {t("Don't have an account? ")}
-        <NavLink to="/register">{t('Sign up')}</NavLink>
+        <A to="/register">{t('Sign up')}</A>
       </div>
     </div>
   );
