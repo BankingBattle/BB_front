@@ -12,7 +12,7 @@ import { Game } from '../models/Game';
 import { EntityCard } from '../components/entity_card';
 
 let game: Game = {
-  title: "Trial Game",
+  title: "КВИДДИЧ",
   description: "Смысл игры заключается в том, чтобы At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga"
 }
 
@@ -35,6 +35,7 @@ let teams = [
   }
 ]
 
+
 function GameProfile() {
   const { t } = useTranslation();
 
@@ -52,7 +53,7 @@ function GameProfile() {
     <div className="lg:w-5/6 mx-auto bg-white p-5 lg:rounded-xl shadow-sm">
       {t.length == 2 ? (
         <>
-          <h1 className="flex justify-center text-2xl">{game.title}</h1>
+          <h1 className="flex justify-center text-3xl">{game.title}</h1>
           <div className="flex flex-col w-full mt-5">
             <div className="flex flex-row w-full">
               <div className="flex flex-col w-1/3">
@@ -73,6 +74,14 @@ function GameProfile() {
                   <p className="flex justify-center text-sm text-slate-500">
                     Лидерборд участников соревнования
                   </p>
+                  <br />
+                  <ol className="text-center">
+                    {teams.map((team, i) => (
+                      <li>
+                        <span className="text-slate-500">{i + 1}.</span> {team.name}
+                      </li>
+                    ))}
+                  </ol>
                 </div>
 
               </div>
@@ -83,6 +92,9 @@ function GameProfile() {
                 <p className="text-slate-500">{game.description}</p>
               </div>
 
+            </div>
+            <div className="text-2xl p-2 m-2">
+              Раунды
             </div>
             <div className="flex flex-row justify-between w-full bg-gray-100 shadow-sm lg:rounded-xl p-5 m-2">
               <p>ID раунда</p>
