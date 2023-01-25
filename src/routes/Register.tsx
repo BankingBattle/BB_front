@@ -168,7 +168,7 @@ function Register() {
 
         <button
           type="submit"
-          className="lg:w-96 w-full my-8 bg-purple-500 hover:bg-purple-600 text-white"
+          className="mx-1 my-1 px-3 py-2 rounded-md transition-colors lg:w-96 w-full my-8 bg-purple-500 hover:bg-purple-600 text-white"
         >
           {t('Sign up')}
         </button>

@@ -36,19 +36,13 @@ export const GameRow: React.FC<GameRowProps> = ({ game, id }) => {
       </p>
       <div className="flex">
         {selfTeam ? (
-          <NavLink
-            to={`/game/${id}`}
-            className="text-green-500 hover:text-green-600 border flex-1 text-center border-green-500 hover:border-green-600 mx-1 my-1 px-3 py-2 rounded-md transition-colors"
-          >
+          <span className="text-green-500 hover:text-green-600 border flex-1 text-center border-green-500 hover:border-green-600 mx-1 my-1 px-3 py-2 rounded-md transition-colors">
             {t('You are in')}
-          </NavLink>
+          </span>
         ) : null}
-        <NavLink
-          to={`/game/${id}`}
-          className="bg-purple-500 hover:bg-purple-600 text-white  mx-1 my-1 px-3 py-2 rounded-md transition-colors"
-        >
+        <span className="bg-purple-500 hover:bg-purple-600 text-white  mx-1 my-1 px-3 py-2 rounded-md transition-colors">
           {t('Open game')}
-        </NavLink>
+        </span>
       </div>
     </NavLink>
   );

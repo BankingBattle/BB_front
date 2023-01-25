@@ -39,6 +39,7 @@ export function Header({ isLoggedIn }: Props) {
             localStorage.removeItem('refresh');
           },
           to: '/',
+          reloadDocument: true,
           className: 'py-2 lg:mr-20 hover:text-purple-500 text-black',
         },
       ];

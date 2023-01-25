@@ -4,8 +4,12 @@ import App, { loader as appLoader } from './routes/App';
 import Home from './routes/Home';
 import Login, { action as loginAction } from './routes/Login';
 import Register, { action as registerAction } from './routes/Register';
-import Profile, { loader as profileLoader } from './routes/Profile';
+import Profile, {
+  loader as profileLoader,
+  action as profileAction,
+} from './routes/Profile';
 import Game, { loader as gameLoader } from './routes/Game';
+
 import Error from './routes/Error';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -41,6 +45,7 @@ const router = createBrowserRouter([
         path: 'profile',
         element: <Profile />,
         loader: profileLoader,
+        action: profileAction,
       },
       {
         path: 'game/:id',
