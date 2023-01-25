@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { register } from './api';
+import { register } from '.';
 
 export const registerError = z
   .object({ message: z.string() })

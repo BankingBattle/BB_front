@@ -2,38 +2,20 @@ import { useTranslation } from 'react-i18next';
 import {
   Form,
   ActionFunctionArgs,
-  NavLink,
   redirect,
   useActionData,
 } from 'react-router-dom';
-import { z } from 'zod';
 import { api, query } from '../api';
 import { queryClient } from '../main';
 import Balancer from 'react-wrap-balancer';
 
 import { isErrorFromAlias } from '@zodios/core';
 import { ZodiosMatchingErrorsByAlias } from '@zodios/core/lib/zodios.types';
-
-export const formSchema = z
-  .object({
-    email: z.string().email(),
-    first_name: z.string(),
-    last_name: z.string(),
-    login: z.string().min(3, { message: 'Login must be 3 or more characters' }),
-    password: z
-      .string()
-      .min(8, { message: 'Password must be 8 or more characters' }),
-    confirm_password: z.string(),
-  })
-  .refine(({ password, confirm_password }) => password === confirm_password, {
-    message: 'Passwords must match',
-    path: ['confirm_password'],
-  });
-
-type Error = z.ZodFormattedError<z.infer<typeof formSchema>, string>;
+import { RegisterError, registerSchema } from '../schemas';
+import { A } from '../components/A';
 
 export async function action({ request }: ActionFunctionArgs) {
-  const data = formSchema.safeParse(
+  const data = registerSchema.safeParse(
     Object.fromEntries(await request.formData())
   );
 
@@ -54,7 +36,7 @@ export async function action({ request }: ActionFunctionArgs) {
       >;
 
       if (error.response.status === 400) {
-        return error.response.data as Error;
+        return error.response.data as RegisterError;
       }
     }
 
@@ -75,7 +57,7 @@ function Register() {
       </h1>
       <Form
         method="post"
-        className="lg:w-1/3 w-full mx-auto p-5 flex flex-col items-center"
+        className="lg:w-1/2 w-full mx-auto p-5 flex flex-col items-center"
       >
         {'_errors' in errors &&
           errors._errors.map((error) => (
@@ -193,7 +175,7 @@ function Register() {
       </Form>
       <div className="text-center">
         {t('Already have an account? ')}
-        <NavLink to="/login">{t('Log in')}</NavLink>
+        <A to="/login">{t('Log in')}</A>
       </div>
     </>
   );
