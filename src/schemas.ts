@@ -1,5 +1,11 @@
 import { z } from 'zod';
 
+export const createGameSchema = z
+  .object({
+    name: z.string(),
+    description: z.string(),
+  })
+
 export const registerSchema = z
   .object({
     email: z.string().email(),
@@ -15,6 +21,11 @@ export const registerSchema = z
     message: 'Passwords must match',
     path: ['confirm_password'],
   });
+
+export type CreateGameError = z.ZodFormattedError<
+  z.infer<typeof createGameSchema>,
+  string
+>;
 
 export type RegisterError = z.ZodFormattedError<
   z.infer<typeof registerSchema>,

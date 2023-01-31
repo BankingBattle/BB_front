@@ -18,7 +18,7 @@ api.axios.interceptors.request.use(
     return config;
   },
   (error) => Promise.reject(error)
-);
+)
 
 api.axios.interceptors.response.use(
   (response) => {

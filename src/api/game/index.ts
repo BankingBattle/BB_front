@@ -1,5 +1,6 @@
 import { makeApi } from '@zodios/core';
 import { z } from 'zod';
+import { register } from '../user';
 
 const leaderboard = z
   .object({
@@ -27,6 +28,18 @@ export const game = z.object({
   leaderboard: leaderboard,
 });
 
+
+export const createGameRequest = z.object({
+  name: z.string(),
+  description: z.string(),
+})
+
+export const createGameResponse = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string()
+});
+
 export const gameApi = makeApi([
   {
     method: 'get',
@@ -40,4 +53,17 @@ export const gameApi = makeApi([
     alias: 'game',
     response: game,
   },
+  {
+    method: 'post',
+    path: '/game/',
+    alias: 'create_game',
+    response: createGameResponse,
+    parameters: [
+      {
+        name: 'create_game_request',
+        schema: createGameRequest,
+        type: 'Body',
+      },
+    ],
+  }
 ]);
