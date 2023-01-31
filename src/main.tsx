@@ -4,6 +4,7 @@ import App, { loader as appLoader } from './routes/App';
 import Home from './routes/Home';
 import Login, { action as loginAction } from './routes/Login';
 import Register, { action as registerAction } from './routes/Register';
+import CreateGame, {action as createGameAction } from './routes/CreateGame';
 import Profile, {
   loader as profileLoader,
   action as profileAction,
@@ -19,6 +20,7 @@ export const queryClient = new QueryClient();
 
 import './i18n';
 import './main.css';
+import Round from './routes/Round';
 
 const router = createBrowserRouter([
   {
@@ -30,6 +32,11 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
+      },
+      {
+        path: 'create',
+        element: <CreateGame />,
+        action: createGameAction,
       },
       {
         path: 'login',
@@ -53,6 +60,10 @@ const router = createBrowserRouter([
         // @ts-ignore
         loader: gameLoader,
       },
+      {
+        path: 'round',
+        element: <Round />
+      }
     ],
   },
 ]);
