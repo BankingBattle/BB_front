@@ -53,16 +53,30 @@ export const userApi = makeApi([
   },
   {
     method: 'patch',
-    path: '/register/',
+    path: '/user/me/',
     alias: 'update',
     parameters: [
       {
         name: 'update',
-        schema: user.partial(),
+        schema: z
+          .object({
+            email: z.string().email(),
+            first_name: z.string(),
+            last_name: z.string(),
+            password: z.string(),
+          })
+          .partial(),
         type: 'Body',
       },
     ],
-    response: user,
+    response: user.omit({ login: true }),
+    errors: [
+      {
+        status: 400,
+        description: 'Update data error',
+        schema: registerError,
+      },
+    ],
   },
   {
     method: 'post',
