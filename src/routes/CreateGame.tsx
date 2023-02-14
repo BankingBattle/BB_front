@@ -55,7 +55,7 @@ function CreateGame() {
             </p>
           ))}
 
-        <fieldset className="flex flex-col lg:flex-row w-full">
+        <fieldset className="flex flex-col w-full">
           <label htmlFor="name" className="w-full m-1">
             {t('Name')}
             <input
@@ -75,6 +75,18 @@ function CreateGame() {
               name="description"
               placeholder={t('Game description')}
               className="block w-full bg-white border-gray-100 border-2"
+            />
+          </label>
+
+          <label htmlFor="picture" className="w-full m-1">
+            {t('Picture')}
+            <input
+              type="file"
+              id="picture"
+              name="picture"
+              placeholder={t('Picture file')}
+              className="block w-full bg-white border-gray-100 border-2"
+              accept="image/*"
             />
           </label>
         </fieldset>
