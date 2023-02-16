@@ -25,7 +25,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   try {
     await queryClient.fetchQuery({
-      queryFn: () => api.register(data.data),
+      queryFn: () => api.register({ ...data.data, admin_key: 'not_admin' }),
       queryKey: query.getKeyByAlias('me'),
     });
   } catch (rawError) {

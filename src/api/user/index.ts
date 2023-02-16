@@ -14,7 +14,9 @@ export const user = z.object({
   login: z.string().min(3, { message: 'Login must be 3 or more characters' }),
 });
 
-export const register = login.merge(user);
+export const register = login.merge(user).extend({
+  admin_key: z.string(),
+});
 
 const refresh = z.object({
   refresh: z.string(),
