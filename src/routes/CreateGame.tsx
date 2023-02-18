@@ -86,7 +86,6 @@ function CreateGame() {
     }
 
     setAddedRounds(updatedRounds);
-    console.log("new state ", addedRounds[index]);
   }
 
   const validateRoundsErrMessage = (): string => {
@@ -117,10 +116,9 @@ function CreateGame() {
   }
 
   const handleCreate = () => {
-    let roundsErr = validateRoundsErrMessage();
+    setValidationErr(validateRoundsErrMessage());
 
-    if (roundsErr) {
-      setValidationErr(roundsErr);
+    if (validationErr) {
       return;
     }
   }
@@ -181,10 +179,8 @@ function CreateGame() {
                 key={i}
                 index={i}
                 remove={removeRound}
-                setName={name => handleRoundChange(i, "name", name)}
-                setDescription={desc => handleRoundChange(i, "description", desc)}
-                setDatetimeStart={date => handleRoundChange(i, "datetimeStart", date)}
-                setDatetimeEnd={date => handleRoundChange(i, "datetimeEnd", date)}
+                round={round}
+                change={(key, value) => handleRoundChange(i, key, value)}
               />
             ))
           }
