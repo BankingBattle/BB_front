@@ -1,11 +1,12 @@
 import { useTranslation } from 'react-i18next';
-import { useLoaderData } from 'react-router-dom';
+import { ActionFunctionArgs, redirect, useLoaderData } from 'react-router-dom';
 import { z } from 'zod';
 import { api, query } from '../api';
 import { game } from '../api/game';
 import { A } from '../components/A';
 import { queryClient } from '../main';
 import { useState } from 'react';
+import { createGameSchema } from '../schemas';
 
 // export const loader = async ({ params }: { params: { id: string } }) => {
 //   return queryClient.fetchQuery({
@@ -59,7 +60,7 @@ function Round() {
             <div className="p-5 mb-4 lg:rounded-xl shadow-sm bg-gray-100">
               <button
                 className="mx-1 my-1 px-3 py-2 rounded-md transition-colors w-full bg-purple-500 hover:bg-purple-600 text-white"
-              >{t('Downlaod data')}</button>
+              >{t('Download data')}</button>
             </div>
 
             <div className="p-5 lg:rounded-xl shadow-sm bg-gray-100">

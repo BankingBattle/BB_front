@@ -3,6 +3,7 @@ import { z } from 'zod';
 export const createGameSchema = z.object({
   name: z.string(),
   description: z.string(),
+  picture: z.string()
 });
 
 export const registerSchema = z
