@@ -53,8 +53,8 @@ function CreateGame() {
     setAddedRounds([...addedRounds, {
       name: "",
       description: "",
-      datetimeStart: (new Date()).toISOString(),
-      datetimeEnd: (new Date()).toISOString()
+      datetimeStart: (new Date()).toISOString().slice(0, -1),
+      datetimeEnd: (new Date()).toISOString().slice(0, -1)
     }])
   }
 

@@ -41,7 +41,7 @@ export function CreateRoundForm({ index,
         <input
           name="datetimeStart"
           type="datetime-local"
-          value={(new Date()).toISOString()}
+          value={(new Date()).toISOString().slice(0, -1)}
           onChange={e => setDatetimeStart(e.target.value)}
           placeholder={t('Start')}
           className="block bg-white border-gray-100 border-2 w-1/3"
@@ -50,7 +50,7 @@ export function CreateRoundForm({ index,
         <input
           name="datetimeEnd"
           type="datetime-local"
-          value={(new Date()).toISOString()}
+          value={(new Date()).toISOString().slice(0, -1)}
           onChange={e => setDatetimeEnd(e.target.value)}
           placeholder={t('End')}
           className="block bg-white border-gray-100 border-2 w-1/3"
