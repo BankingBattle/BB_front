@@ -1,6 +1,6 @@
 import { makeApi } from '@zodios/core';
 import { z } from 'zod';
-import { register } from '../user';
+import { createRoundSchema } from '../../schemas';
 
 const leaderboard = z
   .object({
@@ -35,9 +35,21 @@ export const createGameRequest = z.object({
 })
 
 export const createGameResponse = z.object({
-  id: z.string(),
-  name: z.string(),
-  description: z.string()
+  message: z.string().optional(),
+  response_data: z.object({
+    id: z.number(),
+    name: z.string(),
+    description: z.string()
+  }).optional()
+});
+
+export const createRoundRequest = createRoundSchema;
+
+export const createRoundResponse = z.object({
+  message: z.string(),
+  response_data: createRoundSchema.extend({
+    is_active: z.boolean()
+  }).nullable()
 });
 
 export const gameApi = makeApi([
@@ -64,6 +76,19 @@ export const gameApi = makeApi([
         schema: createGameRequest,
         type: 'Body',
       },
-    ],
-  }
+    ]
+  },
+  {
+    method: 'post',
+    path: '/round/create/',
+    alias: 'create_round',
+    response: createRoundResponse,
+    parameters: [
+      {
+        name: 'create_round_request',
+        schema: createRoundRequest,
+        type: 'Body',
+      }
+    ]
+  },
 ]);

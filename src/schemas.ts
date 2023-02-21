@@ -2,8 +2,15 @@ import { z } from 'zod';
 
 export const createGameSchema = z.object({
   name: z.string(),
+  description: z.string()
+});
+
+export const createRoundSchema = z.object({
+  game_id: z.number(),
+  name: z.string(),
   description: z.string(),
-  picture: z.string()
+  datetime_start: z.string(),
+  datetime_end: z.string()
 });
 
 export const registerSchema = z

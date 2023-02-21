@@ -1,46 +1,27 @@
 import { useTranslation } from 'react-i18next';
-import {
-  Form,
-  ActionFunctionArgs,
-  redirect,
-  useActionData,
-} from 'react-router-dom';
+import { ActionFunctionArgs, Form, redirect } from 'react-router-dom';
 import { api, query } from '../api';
 import { queryClient } from '../main';
 import Balancer from 'react-wrap-balancer';
-import { CreateGameError, createGameSchema } from '../schemas';
+import { createGameSchema, createRoundSchema } from '../schemas';
 import { faCirclePlus } from '@fortawesome/free-solid-svg-icons/faCirclePlus';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { CreateRoundForm } from '../components/create_round_form/CreateRoundForm';
 import { Round } from '../models/Round';
+import { createRoundResponse } from '../api/game';
 
 const MAX_ROUNDS = 24;
 
-export async function action({ request }: ActionFunctionArgs) {
-  const data = createGameSchema.safeParse(
-    Object.fromEntries(await request.formData())
-  );
-
-  if (!data.success) {
-    return data.error.format();
-  }
-
-  try {
-    await queryClient.fetchQuery({
-      queryFn: () => api.create_game(data.data),
-      queryKey: query.getKeyByAlias('me'),
-    });
-  } catch (rawError) {
-    return { _errors: ['Unknown error'] };
-  }
-
-  return redirect('/');
+export function action({ request } : ActionFunctionArgs) {
+  return redirect("/");
 }
 
 function CreateGame() {
-  const errors = (useActionData() || {}) as FormError<typeof action>;
   const { t } = useTranslation();
+
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
 
   const [addedRounds, setAddedRounds] = useState([] as Round[]);
   const [validationErr, setValidationErr] = useState("");
@@ -51,6 +32,7 @@ function CreateGame() {
     }
 
     setAddedRounds([...addedRounds, {
+      game_id: 0,
       name: "",
       description: "",
       datetimeStart: (new Date()).toISOString().slice(0, -1),
@@ -97,8 +79,6 @@ function CreateGame() {
       let dateStart = Date.parse(addedRounds[i].datetimeStart);
       let dateEnd = Date.parse(addedRounds[i].datetimeEnd);
 
-      console.log(dateStart, dateEnd);
-
       if (!dateStart) {
         return `${t('Err in round')} ${i + 1}: ${t('Invalid start datetime')}`;
       }
@@ -115,11 +95,89 @@ function CreateGame() {
     return "";
   }
 
-  const handleCreate = () => {
-    setValidationErr(validateRoundsErrMessage());
+  const handleCreate = async (event: FormEvent) => {
+    if (!name) {
+      setValidationErr(t('Name must be non-empty'));
+      event.preventDefault();
+      return false;
+    }
 
+    let roundsErr = validateRoundsErrMessage();
+
+    if (roundsErr) {
+      setValidationErr(roundsErr);
+      event.preventDefault();
+      return false;
+    }
+
+    setValidationErr(validateRoundsErrMessage());
     if (validationErr) {
-      return;
+      event.preventDefault();
+      return false;
+    }
+
+    const gameData = createGameSchema.safeParse(
+      Object.create({
+        name: name,
+        description: description
+      })
+    );
+
+    if (!gameData.success) {
+      setValidationErr("Error");
+      event.preventDefault();
+      return false;
+    }
+
+
+    try {
+      const result = await queryClient.fetchQuery({
+        queryFn: () => api.create_game(gameData.data),
+        queryKey: query.getKeyByAlias('me'),
+      });
+
+      if (!result.response_data) {
+        setValidationErr(result.message ?? t("Unknown error"));
+        event.preventDefault();
+        return;
+      }
+
+      const gameId = result.response_data.id;
+
+      for (let i = 0; i < addedRounds.length; i++) {
+        await createRound(gameId, addedRounds[i]);
+      }
+
+      return true;
+    } catch (err) {
+      setValidationErr("Unknown error");
+      event.preventDefault();
+      return false;
+    }
+  }
+
+  const createRound = async (gameId: number, round: Round) => {
+    const roundData = createRoundSchema.safeParse(Object.create({
+      ...round,
+      game_id: gameId
+    }));
+
+    if (!roundData.success) {
+      throw new Error("round data parsing failed");
+    }
+
+    try {
+      const result = await queryClient.fetchQuery({
+        queryFn: () => api.create_round(roundData.data),
+        queryKey: query.getKeyByAlias('me')
+      });
+
+      if (!result.response_data) {
+        throw new Error(result.message ?? t("Unknown error"));
+      }
+
+    } catch (err) {
+      throw err;
     }
   }
 
@@ -131,20 +189,17 @@ function CreateGame() {
       </h1>
       <Form
         method="post"
+        onSubmit={handleCreate}
         className="lg:w-1/2 w-full mx-auto p-5 flex flex-col items-center"
       >
-        {'_errors' in errors &&
-          errors._errors.map((error) => (
-            <p key={error} className="text-red-600">
-              {t(error)}
-            </p>
-          ))}
 
         <fieldset className="flex flex-col w-full">
           <input
             type="text"
             id="name"
             name="name"
+            value={name}
+            onChange={e => setName(e.target.value)}
             className="block w-full bg-white border-gray-100 border-2"
             placeholder={t('Name')}
           />
@@ -152,6 +207,8 @@ function CreateGame() {
             type="text"
             id="description"
             name="description"
+            value={description}
+            onChange={e => setDescription(e.target.value)}
             className="block w-full bg-white border-gray-100 border-2"
             placeholder={t('Description')}
           />
@@ -161,6 +218,7 @@ function CreateGame() {
           <button
             disabled={addedRounds.length >= MAX_ROUNDS}
             onClick={addRound}
+            type="button"
             className={addedRounds.length < MAX_ROUNDS
               ? "mx-1 my-1 px-3 py-2 rounded-md transition-colors transition-colors bg-purple-500 hover:bg-purple-600 text-white block"
               : "mx-1 my-1 px-3 py-2 rounded-md transition-colors transition-colors bg-gray-400 text-white block"}>
@@ -187,7 +245,7 @@ function CreateGame() {
         </div>
 
         <button
-          onClick={handleCreate}
+          type="submit"
           className="mx-1 my-1 px-3 py-2 rounded-md transition-colors lg:w-96 w-full my-8 bg-purple-500 hover:bg-purple-600 text-white"
         >
           {t('Create')}
