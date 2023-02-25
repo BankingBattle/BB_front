@@ -3,7 +3,7 @@ import {
   Form,
   ActionFunctionArgs,
   redirect,
-  useActionData,
+  useActionData, useLoaderData
 } from 'react-router-dom';
 import { api, query } from '../api';
 import { queryClient } from '../main';
@@ -13,6 +13,14 @@ import { isErrorFromAlias } from '@zodios/core';
 import { ZodiosMatchingErrorsByAlias } from '@zodios/core/lib/zodios.types';
 import { RegisterError, registerSchema } from '../schemas';
 import { A } from '../components/A';
+
+export const loader = async () => {
+  return queryClient.fetchQuery({
+    queryFn: () => api.me(),
+    queryKey: query.getKeyByAlias('me'),
+    staleTime: 1000,
+  }).catch(() => null);
+};
 
 export async function action({ request }: ActionFunctionArgs) {
   const data = registerSchema.safeParse(
@@ -48,7 +56,12 @@ export async function action({ request }: ActionFunctionArgs) {
 
 function Register() {
   const errors = (useActionData() || {}) as FormError<typeof action>;
+  const data = useLoaderData();
   const { t } = useTranslation();
+
+  if (data != null) {
+    return <></>;
+  }
 
   return (
     <>

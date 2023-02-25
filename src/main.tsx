@@ -3,7 +3,9 @@ import ReactDOM from 'react-dom/client';
 import App, { loader as appLoader } from './routes/App';
 import Home, {loader as homeLoader} from './routes/Home';
 import Login, { action as loginAction } from './routes/Login';
-import Register, { action as registerAction } from './routes/Register';
+import Register, {
+  action as registerAction,
+  loader as registerLoader } from './routes/Register';
 import CreateGame, {action as createGameAction } from './routes/CreateGame';
 import Profile, {
   loader as profileLoader,
@@ -48,6 +50,7 @@ const router = createBrowserRouter([
       {
         path: 'register',
         element: <Register />,
+        loader: registerLoader,
         action: registerAction,
       },
       {
