@@ -28,6 +28,10 @@ export const game = z.object({
   leaderboard: leaderboard,
 });
 
+export const getGameResponse = z.object({
+  response_data: game
+})
+
 
 export const createGameRequest = z.object({
   name: z.string(),
@@ -63,7 +67,7 @@ export const gameApi = makeApi([
     method: 'get',
     path: '/game/:id',
     alias: 'game',
-    response: game,
+    response: getGameResponse,
   },
   {
     method: 'post',
