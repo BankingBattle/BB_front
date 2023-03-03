@@ -1,7 +1,7 @@
 import { makeApi } from '@zodios/core';
 import { z } from 'zod';
 import { createRoundSchema } from '../../schemas';
-import { createGameError } from './errors';
+import { createGameError, createRoundError } from './errors';
 
 const leaderboard = z
   .object({
@@ -103,6 +103,13 @@ export const gameApi = makeApi([
         schema: createRoundRequest,
         type: 'Body',
       }
-    ]
+    ],
+    errors: [
+      {
+        status: 400,
+        description: 'Create round error',
+        schema: createRoundError,
+      },
+    ],
   },
 ]);

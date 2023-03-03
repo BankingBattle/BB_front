@@ -6,7 +6,7 @@ export const createGameSchema = z.object({
 });
 
 export const createRoundSchema = z.object({
-  game_id: z.number(),
+  game_id: z.string(),
   name: z.string(),
   description: z.string(),
   datetime_start: z.string(),
@@ -31,6 +31,11 @@ export const registerSchema = z
 
 export type CreateGameError = z.ZodFormattedError<
   z.infer<typeof createGameSchema>,
+  string
+>;
+
+export type CreateRoundError = z.ZodFormattedError<
+  z.infer<typeof createRoundSchema>,
   string
 >;
 
