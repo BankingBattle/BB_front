@@ -5,6 +5,7 @@ import { api, query } from '../api';
 import { game, getGameResponse } from '../api/game';
 import { A } from '../components/A';
 import { queryClient } from '../main';
+import { RoundView } from '../components/round_view';
 
 export const loader = async ({ params }: { params: { id: string } }) => {
   return queryClient.fetchQuery({
@@ -20,6 +21,8 @@ function Game() {
   const { response_data } = useLoaderData() as z.infer<typeof getGameResponse>;
 
   const team = response_data.leaderboard.find((team) => team.is_current_team);
+
+  console.log(response_data);
 
   return (
     <div className="lg:w-5/6 mx-auto bg-white p-10 lg:rounded-3xl shadow-2xl">
@@ -79,11 +82,15 @@ function Game() {
           </div>
         </div>
         <div className="text-2xl p-2 m-2">{t('Rounds')}</div>
-        <div className="flex flex-row justify-around w-full bg-gray-100 shadow-sm lg:rounded-xl p-5">
-          <p>{t('Round ID')}</p>
-          <p>{t('Round name')}</p>
-          <p>{t('Open round')}</p>
-        </div>
+        {[{name: "R1", description: "dshk", datetimeStart: "2022-01-01", datetimeEnd: "2022-02-02"}]
+          .map(round => (
+          <RoundView
+            name={round.name}
+            description={round.description}
+            datetimeStart={round.datetimeStart}
+            datetimeEnd={round.datetimeEnd}
+          />
+        ))}
       </div>
     </div>
   );

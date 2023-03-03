@@ -1,6 +1,7 @@
 import { makeApi } from '@zodios/core';
 import { z } from 'zod';
 import { createRoundSchema } from '../../schemas';
+import { createGameError } from './errors';
 
 const leaderboard = z
   .object({
@@ -12,19 +13,21 @@ const leaderboard = z
   })
   .array();
 
-const rounds = z
+export const round = z
   .object({
     id: z.number(),
     name: z.string(),
+    description: z.string().optional(),
     datetime_start: z.string().datetime(),
     datetime_end: z.string().datetime(),
-  })
-  .array();
+  });
+
+
 
 export const game = z.object({
   name: z.string(),
   description: z.string(),
-  rounds: rounds,
+  rounds: round.array(),
   leaderboard: leaderboard,
 });
 
@@ -80,7 +83,14 @@ export const gameApi = makeApi([
         schema: createGameRequest,
         type: 'Body',
       },
-    ]
+    ],
+    errors: [
+      {
+        status: 400,
+        description: 'Create game error',
+        schema: createGameError,
+      },
+    ],
   },
   {
     method: 'post',

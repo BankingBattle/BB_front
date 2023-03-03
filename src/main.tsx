@@ -7,10 +7,17 @@ import Register, {
   action as registerAction,
   loader as registerLoader } from './routes/Register';
 import CreateGame, {action as createGameAction } from './routes/CreateGame';
+
+import ManageRounds, {
+  loader as createRoundLoader,
+  action as createRoundAction
+} from './routes/ManageRounds';
+
 import Profile, {
   loader as profileLoader,
   action as profileAction,
 } from './routes/Profile';
+
 import Game, { loader as gameLoader } from './routes/Game';
 
 import Error from './routes/Error';
@@ -24,6 +31,7 @@ export const queryClient = new QueryClient();
 import './i18n';
 import './main.css';
 import Round from './routes/Round';
+
 
 const router = createBrowserRouter([
   {
@@ -41,6 +49,13 @@ const router = createBrowserRouter([
         path: 'create',
         element: <CreateGame />,
         action: createGameAction,
+      },
+      {
+        path: 'manage_rounds/:id',
+        element: <ManageRounds />,
+        // @ts-ignore
+        loader: createRoundLoader,
+        action: createRoundAction,
       },
       {
         path: 'login',

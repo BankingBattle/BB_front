@@ -66,6 +66,11 @@ const resources = {
       Create: 'Создать',
       Start: 'Начало',
       End: 'Конец',
+      'Upload data': 'Загрузить данные',
+      'Manage rounds for game': 'Управление раундами игры',
+      'Add new': 'Добавить новый',
+      'Add': 'Добавить',
+      'Go to game': 'Перейти к игре',
     },
   },
 };

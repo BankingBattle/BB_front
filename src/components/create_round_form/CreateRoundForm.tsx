@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose } from '@fortawesome/free-solid-svg-icons/faClose';
 import { Round } from '../../models/Round';
+import { faArrowUp } from '@fortawesome/free-solid-svg-icons';
 
 interface CreateRoundFormProps {
   key: number
@@ -60,6 +61,17 @@ export function CreateRoundForm({ index, remove, round, change } : CreateRoundFo
           placeholder={t('Description')}
         >
         </textarea>
+      </div>
+      <div>
+        <button className="p-2 mt-1 rounded-md bg-purple-500 hover:bg-purple-600 text-white">
+          <FontAwesomeIcon icon={faArrowUp} />
+          &nbsp;
+          {t('Upload data')}
+        </button>
+        <input
+          className="mx-1 mt-5 px-3 py-2 rounded-md block text-white cursor-pointer bg-gray-500"
+          id="file_input" type="file"
+        />
       </div>
     </div>
   )
