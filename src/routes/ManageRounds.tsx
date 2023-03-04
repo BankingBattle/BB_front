@@ -13,6 +13,7 @@ import { getGameResponse } from '../api/game';
 import { CreateGameError, CreateRoundError, createRoundSchema } from '../schemas';
 import { isErrorFromAlias } from '@zodios/core';
 import { ZodiosMatchingErrorsByAlias } from '@zodios/core/lib/zodios.types';
+import { RoundView } from '../components/round_view';
 
 export const loader = async ({ params }: { params: { id: string } }) => {
   return queryClient.fetchQuery({
@@ -76,7 +77,7 @@ function ManageRounds() {
   }
 
   const change = (key: string, value: any) => {
-
+    setRound({...round, [key]: value});
   }
 
   return (
@@ -95,7 +96,7 @@ function ManageRounds() {
                 </p>
               ))}
             <div>
-              <h3>{t('Add new')}</h3>
+              <h3 className="font-semibold">{t('Add new')}</h3>
             </div>
             <div className="flex flex-row w-full">
               <input
@@ -163,9 +164,9 @@ function ManageRounds() {
           </Form>
 
           {/* EXISTING ROUNDS LIST */}
-          <div>
+          <div className="w-full">
             <div>
-              <h3>
+              <h3 className="font-semibold">
                 {t(response_data.rounds.length > 0
                   ? 'Current rounds'
                   : 'There are no existing rounds')
@@ -173,7 +174,15 @@ function ManageRounds() {
               </h3>
             </div>
             <div>
-              {response_data.rounds.map(round => (<p>{round.name}</p>))}
+              {response_data.rounds.map(round =>
+                <RoundView
+                  name={round.name}
+                  description={round.description ?? ""}
+                  datetimeStart={round.datetime_start}
+                  datetimeEnd={round.datetime_end}
+                  editable={false}
+                  deleteCallback={() => remove(round.id)}
+                />)}
             </div>
           </div>
 

@@ -73,6 +73,7 @@ const resources = {
       'Go to game': 'Перейти к игре',
       'There are no existing rounds': 'Раундов пока нет',
       'Round data': 'Данные раунда',
+      'Current rounds': 'Добавленные раунды',
     },
   },
 };

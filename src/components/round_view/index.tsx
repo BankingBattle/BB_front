@@ -8,6 +8,8 @@ interface RoundViewProps {
   datetimeStart: string
   datetimeEnd: string
   editable?: boolean
+  deleteCallback?: () => void
+  applyCallback?: (name: string, desc: string) => void
 }
 
 
@@ -15,25 +17,14 @@ export function RoundView({ name,
                             description,
                             datetimeStart,
                             datetimeEnd,
-                            editable = true } : RoundViewProps) {
+                            editable = true,
+                            deleteCallback = () => {},
+                            applyCallback = (name, desc) => {}} : RoundViewProps) {
 
   const [isEdit, setIsEdit] = useState(false);
   const [newName, setNewName] = useState(name);
   const [newDescription, setNewDescription] = useState(description);
 
-
-
-
-  const handleApply = () => {
-    if (newName.length === 0) {
-      return;
-    }
-    setIsEdit(false);
-  }
-
-  const handleDelete = () => {
-    // TODO
-  }
 
   return (
     <div className="flex flex-row justify-between p-2 m-2 lg:rounded-2xl bg-gray-200">
@@ -64,7 +55,7 @@ export function RoundView({ name,
 
       {isEdit
         ? <button
-          onClick={handleApply}
+          onClick={() => applyCallback(newName, newDescription)}
           className="p-3 ml-3 text-green-700 border border-green-700 hover:bg-green-700 hover:text-white font-medium rounded-lg text-sm text-center inline-flex items-center">
             <FontAwesomeIcon icon={faCheck} />
           </button>
@@ -75,7 +66,7 @@ export function RoundView({ name,
             <FontAwesomeIcon icon={faPencil} />
           </button> }
           <button
-            onClick={handleDelete}
+            onClick={deleteCallback}
             className="p-3 ml-3 text-red-700 border border-red-700 hover:bg-red-700 hover:text-white font-medium rounded-lg text-sm text-center inline-flex items-center">
             <FontAwesomeIcon icon={faTrash} />
           </button>
