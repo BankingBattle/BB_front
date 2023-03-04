@@ -7,13 +7,21 @@ interface RoundViewProps {
   description: string
   datetimeStart: string
   datetimeEnd: string
+  editable?: boolean
 }
 
-export function RoundView({ name, description, datetimeStart, datetimeEnd } : RoundViewProps) {
-  const [isEdit, setIsEdit] = useState(false);
 
+export function RoundView({ name,
+                            description,
+                            datetimeStart,
+                            datetimeEnd,
+                            editable = true } : RoundViewProps) {
+
+  const [isEdit, setIsEdit] = useState(false);
   const [newName, setNewName] = useState(name);
   const [newDescription, setNewDescription] = useState(description);
+
+
 
 
   const handleApply = () => {
@@ -28,7 +36,7 @@ export function RoundView({ name, description, datetimeStart, datetimeEnd } : Ro
   }
 
   return (
-    <div className="flex flex-row justify-between p-2 m-2 lg:rounded-2xl bg-gray-50">
+    <div className="flex flex-row justify-between p-2 m-2 lg:rounded-2xl bg-gray-200">
 
       {isEdit
         ? <div className="flex flex-col">
@@ -41,7 +49,7 @@ export function RoundView({ name, description, datetimeStart, datetimeEnd } : Ro
             onChange={e => setNewDescription(e.target.value)}
           />
         </div>
-        : <div className="flex flex-col">
+        : <div className="flex flex-col mt-2">
           <div>
             {name}
           </div>
@@ -50,8 +58,8 @@ export function RoundView({ name, description, datetimeStart, datetimeEnd } : Ro
           </div>
       </div>}
 
-      <div>
-        {datetimeStart} - {datetimeEnd}
+      <div className="mt-2">
+        {new Date(datetimeStart).toLocaleString()} - {new Date(datetimeEnd).toLocaleString()}
       </div>
 
       {isEdit
@@ -61,11 +69,11 @@ export function RoundView({ name, description, datetimeStart, datetimeEnd } : Ro
             <FontAwesomeIcon icon={faCheck} />
           </button>
         : <div className="flex flex-row">
-          <button
+          { editable && <button
             onClick={() => setIsEdit(true)}
             className="p-3 ml-3 border border-black hover:bg-black hover:text-white font-medium rounded-lg text-sm text-center inline-flex items-center">
             <FontAwesomeIcon icon={faPencil} />
-          </button>
+          </button> }
           <button
             onClick={handleDelete}
             className="p-3 ml-3 text-red-700 border border-red-700 hover:bg-red-700 hover:text-white font-medium rounded-lg text-sm text-center inline-flex items-center">
