@@ -82,13 +82,12 @@ function Game() {
           </div>
         </div>
         <div className="text-2xl p-2 m-2">{t('Rounds')}</div>
-        {[{name: "R1", description: "dshk", datetimeStart: "2022-01-01", datetimeEnd: "2022-02-02"}]
-          .map(round => (
+        {response_data.rounds.map(round => (
           <RoundView
             name={round.name}
-            description={round.description}
-            datetimeStart={round.datetimeStart}
-            datetimeEnd={round.datetimeEnd}
+            description={round.description ?? ""}
+            datetimeStart={round.datetime_start}
+            datetimeEnd={round.datetime_end}
           />
         ))}
       </div>

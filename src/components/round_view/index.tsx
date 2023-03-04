@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencil, faTrash, faCheck } from "@fortawesome/free-solid-svg-icons";
+import app from '../../routes/App';
 
 interface RoundViewProps {
   name: string
@@ -9,7 +10,7 @@ interface RoundViewProps {
   datetimeEnd: string
   editable?: boolean
   deleteCallback?: () => void
-  applyCallback?: (name: string, desc: string) => void
+  applyCallback?: (name: string, desc: string) => boolean
 }
 
 
@@ -19,7 +20,7 @@ export function RoundView({ name,
                             datetimeEnd,
                             editable = true,
                             deleteCallback = () => {},
-                            applyCallback = (name, desc) => {}} : RoundViewProps) {
+                            applyCallback = (name, desc) => true} : RoundViewProps) {
 
   const [isEdit, setIsEdit] = useState(false);
   const [newName, setNewName] = useState(name);
@@ -55,7 +56,7 @@ export function RoundView({ name,
 
       {isEdit
         ? <button
-          onClick={() => applyCallback(newName, newDescription)}
+          onClick={() => setIsEdit(!applyCallback(newName, newDescription))}
           className="p-3 ml-3 text-green-700 border border-green-700 hover:bg-green-700 hover:text-white font-medium rounded-lg text-sm text-center inline-flex items-center">
             <FontAwesomeIcon icon={faCheck} />
           </button>
