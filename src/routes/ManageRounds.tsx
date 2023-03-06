@@ -176,6 +176,7 @@ function ManageRounds() {
             <div>
               {response_data.rounds.map(round =>
                 <RoundView
+                  key={round.id}
                   name={round.name}
                   description={round.description ?? ""}
                   datetimeStart={round.datetime_start}
