@@ -53,10 +53,12 @@ export const createGameResponse = z.object({
 export const createRoundRequest = createRoundSchema;
 
 export const createRoundResponse = z.object({
-  message: z.string(),
-  response_data: createRoundSchema.extend({
-    is_active: z.boolean()
-  }).nullable()
+  game_id: z.number(),
+  name: z.string(),
+  description: z.string(),
+  datetime_start: z.string(),
+  datetime_end: z.string(),
+  is_active: z.boolean()
 });
 
 export const gameApi = makeApi([

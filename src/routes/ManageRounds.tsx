@@ -29,7 +29,6 @@ export const action = async ({ request } : ActionFunctionArgs) => {
   );
 
   if (!data.success) {
-    console.log('error data not success: ' + data.error);
     return data.error.format();
   }
 
@@ -39,15 +38,12 @@ export const action = async ({ request } : ActionFunctionArgs) => {
       queryKey: query.getKeyByAlias('create_round', {}),
     });
 
-    if (!result.response_data) {
-      console.log('error null data');
+    if (!result) {
       return { _errors: ['Unknown error'] };
     }
 
-    console.log('success');
-    return redirect(`/manage_rounds/${result.response_data.game_id}`);
+    return redirect(`/manage_rounds/${result.game_id}`);
   } catch (rawError) {
-    console.log('error: ' + rawError);
     if (isErrorFromAlias(api.api, 'create_round', rawError)) {
       const error = rawError as ZodiosMatchingErrorsByAlias<
         typeof api.api,
