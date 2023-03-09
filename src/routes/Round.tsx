@@ -40,8 +40,17 @@ function Round() {
 
   return (
     <div className="lg:w-full mx-3 mx-auto bg-white p-10 lg:rounded-3xl shadow-2xl">
-      <h1 className="flex justify-center text-3xl">{t('Round')}: {response_data?.name}</h1>
+
+      <div className="flex justify-center">
+        <div
+          className={`w-5 h-5 rounded-2xl mt-2 mr-2 bg-${response_data?.is_active ? "green" : "amber"}-500`}
+          title={response_data?.is_active ? "Active" : "Not active"}
+        />
+        <h1 className="text-3xl">{t('Round')}: {response_data?.name}</h1>
+      </div>
+
       <h3 className="flex justify-center text-gray-500">{response_data?.description}</h3>
+
       <div className="flex flex-col w-full mt-5">
         <div className="flex flex-col lg:flex-row w-full">
           <div className="flex flex-col lg:w-1/2 h-full">

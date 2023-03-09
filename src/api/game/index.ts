@@ -35,7 +35,10 @@ export const getGameResponse = z.object({
 
 export const getRoundResponse = z.object({
   message: z.string().optional(),
-  response_data: round.optional()
+  response_data: round.extend({
+    is_active: z.boolean(),
+    game_id: z.number(),
+  }).optional()
 })
 
 
