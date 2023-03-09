@@ -4,13 +4,11 @@ import { ActionFunctionArgs, redirect, useActionData, useLoaderData, useLocation
 import { Round } from '../models/Round';
 import Balancer from 'react-wrap-balancer';
 import { Form } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowUp, faClose } from '@fortawesome/free-solid-svg-icons';
 import { queryClient } from '../main';
 import { api, query } from '../api';
 import { z } from 'zod';
 import { getGameResponse } from '../api/game';
-import { CreateGameError, CreateRoundError, createRoundSchema } from '../schemas';
+import { CreateRoundError, createRoundSchema } from '../schemas';
 import { isErrorFromAlias } from '@zodios/core';
 import { ZodiosMatchingErrorsByAlias } from '@zodios/core/lib/zodios.types';
 import { RoundView } from '../components/round_view';
@@ -79,7 +77,7 @@ function ManageRounds() {
   return (
     <>
       <h1 className="lg:text-5xl self-center lg:w-2/5 font-semibold text-center">
-        <Balancer>{t('Manage rounds for game')} {response_data.name}</Balancer>
+        <Balancer>{t('Manage rounds for game')} {response_data?.name}</Balancer>
       </h1>
         <div className="flex flex-col rounded-xl w-full p-7 my-2 lg:w-1/2 mx-auto items-center">
 
@@ -163,18 +161,18 @@ function ManageRounds() {
           <div className="w-full">
             <div>
               <h3 className="font-semibold">
-                {t(response_data.rounds.length > 0
+                {t(response_data && response_data.rounds.length > 0
                   ? 'Current rounds'
                   : 'There are no existing rounds')
                 }
               </h3>
             </div>
             <div>
-              {response_data.rounds.map(round =>
+              {response_data?.rounds.map(round =>
                 <RoundView
                   key={round.id}
                   name={round.name}
-                  description={round.description ?? ""}
+                  description={round.description ?? "No description"}
                   datetimeStart={round.datetime_start}
                   datetimeEnd={round.datetime_end}
                   editable={false}

@@ -3,18 +3,15 @@ import { z } from 'zod';
 import { createRoundSchema } from '../../schemas';
 import { createGameError, createRoundError } from './errors';
 
-const leaderboard = z
-  .object({
+const leaderboard = z.object({
     id: z.number(),
     name: z.string(),
     place: z.number().int(),
     points: z.number(),
     is_current_team: z.boolean(),
-  })
-  .array();
+  });
 
-export const round = z
-  .object({
+export const round = z.object({
     id: z.number(),
     name: z.string(),
     description: z.string().optional(),
@@ -28,11 +25,17 @@ export const game = z.object({
   name: z.string(),
   description: z.string(),
   rounds: round.array(),
-  leaderboard: leaderboard,
+  leaderboard: leaderboard.array(),
 });
 
 export const getGameResponse = z.object({
-  response_data: game
+  message: z.string().optional(),
+  response_data: game.optional()
+})
+
+export const getRoundResponse = z.object({
+  message: z.string().optional(),
+  response_data: round.optional()
 })
 
 
@@ -73,6 +76,12 @@ export const gameApi = makeApi([
     path: '/game/:id',
     alias: 'game',
     response: getGameResponse,
+  },
+  {
+    method: 'get',
+    path: '/round/:id',
+    alias: 'round',
+    response: getRoundResponse,
   },
   {
     method: 'post',

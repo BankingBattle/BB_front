@@ -1,11 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+
+import Error from './routes/Error';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import './i18n';
+import './main.css';
+
 import App, { loader as appLoader } from './routes/App';
 import Home, {loader as homeLoader} from './routes/Home';
+import Game, { loader as gameLoader } from './routes/Game';
+import Round, { loader as roundLoader }from './routes/Round';
+
 import Login, { action as loginAction } from './routes/Login';
-import Register, {
-  action as registerAction,
-  loader as registerLoader } from './routes/Register';
 import CreateGame, {action as createGameAction } from './routes/CreateGame';
 
 import ManageRounds, {
@@ -18,19 +26,13 @@ import Profile, {
   action as profileAction,
 } from './routes/Profile';
 
-import Game, { loader as gameLoader } from './routes/Game';
-
-import Error from './routes/Error';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import Register, {
+  action as registerAction,
+  loader as registerLoader
+} from './routes/Register';
 
 
 export const queryClient = new QueryClient();
-
-import './i18n';
-import './main.css';
-import Round from './routes/Round';
 
 
 const router = createBrowserRouter([
@@ -81,8 +83,10 @@ const router = createBrowserRouter([
         loader: gameLoader,
       },
       {
-        path: 'round',
+        path: 'round/:id',
         element: <Round />,
+        // @ts-ignore
+        loader: roundLoader
       },
     ],
   },

@@ -20,13 +20,13 @@ function Game() {
 
   const { response_data } = useLoaderData() as z.infer<typeof getGameResponse>;
 
-  const team = response_data.leaderboard.find((team) => team.is_current_team);
+  const team = response_data?.leaderboard.find((team) => team.is_current_team);
 
   console.log(response_data);
 
   return (
     <div className="lg:w-5/6 mx-auto bg-white p-10 lg:rounded-3xl shadow-2xl">
-      <h1 className="flex justify-center text-3xl">{response_data.name}</h1>
+      <h1 className="flex justify-center text-3xl">{response_data?.name}</h1>
       <div className="flex flex-col w-full mt-5">
         <div className="flex flex-col lg:flex-row w-full">
           <div className="flex flex-col lg:w-1/3">
@@ -56,7 +56,7 @@ function Game() {
                 {t('Leaderboard of participants')}
               </p>
               <ol className="text-center">
-                {response_data.leaderboard.map((team, i) => {
+                {response_data?.leaderboard.map((team, i) => {
                   const placement =
                     {
                       1: '🥇',
@@ -78,11 +78,11 @@ function Game() {
             <h1 className="flex justify-center text-xl antialiased uppercase mb-5">
               {t('Description')}
             </h1>
-            <p className="text-slate-500">{response_data.description}</p>
+            <p className="text-slate-500">{response_data?.description}</p>
           </div>
         </div>
         <div className="text-2xl p-2 m-2">{t('Rounds')}</div>
-        {response_data.rounds.map(round => (
+        {response_data?.rounds.map(round => (
           <RoundView
             name={round.name}
             description={round.description ?? ""}

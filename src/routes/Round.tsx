@@ -1,26 +1,16 @@
 import { useTranslation } from 'react-i18next';
-import { ActionFunctionArgs, redirect, useLoaderData } from 'react-router-dom';
+import { useLoaderData } from 'react-router-dom';
 import { z } from 'zod';
 import { api, query } from '../api';
-import { game } from '../api/game';
-import { A } from '../components/A';
+import { getRoundResponse, round } from '../api/game';
 import { queryClient } from '../main';
-import { useState } from 'react';
-import { createGameSchema } from '../schemas';
 
-// export const loader = async ({ params }: { params: { id: string } }) => {
-//   return queryClient.fetchQuery({
-//     queryFn: () => api.game({ params }),
-//     queryKey: query.getKeyByAlias('game', { params }),
-//     staleTime: 1000,
-//   });
-// };
-
-type Submit = {
-  id: number
-  date: string
-  filename: string
-  result: string
+export const loader = async ({ params }: { params: { id: string } }) => {
+  return queryClient.fetchQuery({
+    queryFn: () => api.round({ params }),
+    queryKey: query.getKeyByAlias('round', { params }),
+    staleTime: 1000,
+  });
 };
 
 const submits = [
@@ -46,14 +36,12 @@ const submits = [
 
 function Round() {
   const { t } = useTranslation();
-
-  // const data = useLoaderData() as z.infer<typeof game>;
-
-  // const team = data.leaderboard.find((team) => team.is_current_team);
+  const { response_data } = useLoaderData() as z.infer<typeof getRoundResponse>;
 
   return (
     <div className="lg:w-full mx-3 mx-auto bg-white p-10 lg:rounded-3xl shadow-2xl">
-      <h1 className="flex justify-center text-3xl">{t('Round')}: Round 1</h1>
+      <h1 className="flex justify-center text-3xl">{t('Round')}: {response_data?.name}</h1>
+      <h3 className="flex justify-center text-gray-500">{response_data?.description}</h3>
       <div className="flex flex-col w-full mt-5">
         <div className="flex flex-col lg:flex-row w-full">
           <div className="flex flex-col lg:w-1/2 h-full">
