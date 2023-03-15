@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
-import { useLoaderData } from 'react-router-dom';
+import { ActionFunctionArgs, useLoaderData } from 'react-router-dom';
 import { z } from 'zod';
 import { api, query } from '../api';
-import { game, getGameResponse } from '../api/game';
+import { game, getGameResponse, updateGameRequest } from '../api/game';
 import { A } from '../components/A';
 import { queryClient } from '../main';
 import { RoundView } from '../components/round_view';
@@ -14,6 +14,25 @@ export const loader = async ({ params }: { params: { id: string } }) => {
     staleTime: 1000,
   });
 };
+
+export const action = async ({ request } : ActionFunctionArgs) => {
+  const data = updateGameRequest.safeParse(
+    Object.fromEntries(await request.formData())
+  );
+
+  if (!data.success) {
+    return data.error.format()
+  }
+
+  try {
+    await queryClient.fetchQuery({
+      queryFn: () => api.patch_game({...data.data}),
+      queryKey: query.getKeyByAlias('patch_game'),
+    })
+  } catch (rawError) {
+    return { _errors: ['Unknown error'] };
+  }
+}
 
 function Game() {
   const { t } = useTranslation();
@@ -84,6 +103,7 @@ function Game() {
         <div className="text-2xl p-2 m-2">{t('Rounds')}</div>
         {response_data?.rounds.map(round => (
           <RoundView
+            id={round.id}
             name={round.name}
             description={round.description ?? ""}
             datetimeStart={round.datetime_start}

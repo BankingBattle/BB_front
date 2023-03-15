@@ -62,11 +62,46 @@ function ManageRounds() {
 
   const [round, setRound] = useState({} as Round);
 
+  const [file, setFile] = useState({} as File);
+  const [fileSelected, setFileSelected] = useState(false);
+  const [fileUploaded, setFileUploaded] = useState(false);
+  const [fileUploading, setFileUploading] = useState(false);
+
   const { response_data } = useLoaderData() as z.infer<typeof getGameResponse>;
   const errors = (useActionData() || {}) as FormError<typeof action>;
   const gameId = Number(useLocation().pathname.split('/').slice(-1));
 
   const remove = (index: number) => {
+
+  }
+
+  const uploadData = async (roundId: string, file: File) => {
+    if (fileUploaded) {
+      return;
+    }
+
+    setFileUploading(true);
+
+    try {
+      let formData = new FormData();
+      formData.append("file", file, file.name);
+      formData.append("round_id", roundId);
+
+      const response = await fetch(`/round/uploud_data/${roundId}`, {
+        method: 'PUT',
+        body: formData,
+        //@ts-ignore
+        headers: {
+          'Authorization': localStorage.getItem('access'),
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      console.log(response);
+
+    } catch (err) {
+
+    }
 
   }
 
@@ -171,6 +206,7 @@ function ManageRounds() {
               {response_data?.rounds.map(round =>
                 <RoundView
                   key={round.id}
+                  id={round.id}
                   name={round.name}
                   description={round.description ?? "No description"}
                   datetimeStart={round.datetime_start}

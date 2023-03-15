@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPencil, faTrash, faCheck } from "@fortawesome/free-solid-svg-icons";
+import { faPencil, faTrash, faCheck, faInfo } from '@fortawesome/free-solid-svg-icons';
 import app from '../../routes/App';
 
 interface RoundViewProps {
+  id: number
   name: string
   description: string
   datetimeStart: string
@@ -14,7 +15,8 @@ interface RoundViewProps {
 }
 
 
-export function RoundView({ name,
+export function RoundView({ id,
+                            name,
                             description,
                             datetimeStart,
                             datetimeEnd,
@@ -61,11 +63,18 @@ export function RoundView({ name,
             <FontAwesomeIcon icon={faCheck} />
           </button>
         : <div className="flex flex-row">
-          { editable && <button
+          { editable && <div>
+            <button
             onClick={() => setIsEdit(true)}
             className="p-3 ml-3 border border-black hover:bg-black hover:text-white font-medium rounded-lg text-sm text-center inline-flex items-center">
             <FontAwesomeIcon icon={faPencil} />
-          </button> }
+            </button>
+            <a
+              href={`../round/${id}`}
+              className="p-3 ml-3 border border-black hover:bg-black hover:text-white font-medium rounded-lg text-sm text-center inline-flex items-center">
+              <FontAwesomeIcon icon={faInfo} />
+            </a>
+          </div> }
           <button
             onClick={deleteCallback}
             className="p-3 ml-3 text-red-700 border border-red-700 hover:bg-red-700 hover:text-white font-medium rounded-lg text-sm text-center inline-flex items-center">
