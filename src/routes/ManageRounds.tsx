@@ -169,13 +169,6 @@ function ManageRounds() {
               >
               </textarea>
             </div>
-            <div className="flex flex-row">
-              <h3 className="mt-6 mr-3 ml-2">{t('Round data')}</h3>
-              <input
-                className="mx-1 mt-5 px-3 py-2 rounded-md block text-white cursor-pointer bg-gray-500 w-full"
-                id="file_input" type="file"
-              />
-            </div>
             <div>
               <button
                 type="submit"
