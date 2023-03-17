@@ -23,12 +23,12 @@ function Home() {
 
   return (
     <>
-      <GamesList />
       {Boolean(data) && <a
         className="mx-1 my-5 px-3 py-2 rounded-md transition-colors bg-purple-500 text-white block"
         href="create">
         <FontAwesomeIcon icon={faCirclePlus} />&nbsp;{t('Create a game')}
       </a>}
+      <GamesList />
     </>
   );
 }
