@@ -54,7 +54,14 @@ function Round() {
         <h1 className="text-3xl">{t('Round')}: {response_data?.name}</h1>
       </div>
 
-      <h3 className="flex justify-center text-gray-600 text-xl">{t('Game')}: {game.name}</h3>
+      <h3 className="flex justify-center text-gray-600 text-xl">
+        {t('Game')}:&nbsp;
+        <a
+          className="text-gray-700 hover:text-blue-600 transition-colors"
+          href={`../game/${response_data?.game_id}`}>
+          {game.name}
+        </a>
+      </h3>
       <h3 className="flex justify-center text-gray-500">{response_data?.description}</h3>
 
       <div className="flex flex-col w-full mt-5">
