@@ -1,9 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import { useLoaderData } from 'react-router-dom';
-import { z } from 'zod';
+import { any, z } from 'zod';
 import { api, query } from '../api';
-import { getRoundResponse, round } from '../api/game';
+import { getGameResponse, getRoundResponse, round } from '../api/game';
 import { queryClient } from '../main';
+import { useEffect, useState } from 'react';
+import { Game } from '../models/Game';
 
 export const loader = async ({ params }: { params: { id: string } }) => {
   return queryClient.fetchQuery({
@@ -13,30 +15,33 @@ export const loader = async ({ params }: { params: { id: string } }) => {
   });
 };
 
-const submits = [
-  {
-    id: 1,
-    date: '2022-02-24 05:14',
-    filename: 'test1.go',
-    result: '4'
-  },
-  {
-    id: 2,
-    date: '2022-02-24 05:28',
-    filename: 'test2.go',
-    result: '18'
-  },
-  {
-    id: 3,
-    date: '2022-02-24 06:03',
-    filename: 'test3.go',
-    result: '33'
-  }
-]
 
 function Round() {
   const { t } = useTranslation();
   const { response_data } = useLoaderData() as z.infer<typeof getRoundResponse>;
+
+  const [game, setGame] = useState({} as any);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!response_data) {
+      return;
+    }
+
+    queryClient.fetchQuery({
+      queryFn: () => api.game({ params: {id: response_data.game_id} }),
+      queryKey: query.getKeyByAlias('game', { params: {id: response_data.game_id} }),
+      staleTime: 1000,
+    }).then(response => {
+      if (!response?.response_data) {
+        setError(`Couldn't load round game info: ${response?.message}`);
+      } else {
+        setGame(response.response_data);
+      }
+    })
+  }, []);
+
+
 
   return (
     <div className="lg:w-full mx-3 mx-auto bg-white p-10 lg:rounded-3xl shadow-2xl">
@@ -49,6 +54,7 @@ function Round() {
         <h1 className="text-3xl">{t('Round')}: {response_data?.name}</h1>
       </div>
 
+      <h3 className="flex justify-center text-gray-600 text-xl">{t('Game')}: {game.name}</h3>
       <h3 className="flex justify-center text-gray-500">{response_data?.description}</h3>
 
       <div className="flex flex-col w-full mt-5">
@@ -76,7 +82,7 @@ function Round() {
 
           <div className="p-5 lg:ml-4 mt-4 lg:mt-0 lg:rounded-xl shadow-sm bg-gray-100 w-full">
             <h1 className="flex justify-center text-xl antialiased uppercase mb-5">
-              {t('Your team submits')}
+              {t('Your team mockSubmits')}
             </h1>
             <table className="table-auto lg:w-full">
               <thead className="border-b">
@@ -89,7 +95,7 @@ function Round() {
                 </tr>
               </thead>
               <tbody>
-              {submits.map(submit => (
+              {mockSubmits.map(submit => (
                 <tr className="border-b">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">{submit.id}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">{submit.date}</td>
@@ -112,3 +118,24 @@ function Round() {
 }
 
 export default Round;
+
+const mockSubmits = [
+  {
+    id: 1,
+    date: '2022-02-24 05:14',
+    filename: 'test1.go',
+    result: '4'
+  },
+  {
+    id: 2,
+    date: '2022-02-24 05:28',
+    filename: 'test2.go',
+    result: '18'
+  },
+  {
+    id: 3,
+    date: '2022-02-24 06:03',
+    filename: 'test3.go',
+    result: '33'
+  }
+]
