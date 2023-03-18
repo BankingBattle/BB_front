@@ -1,21 +1,27 @@
 import { useTranslation } from 'react-i18next';
-import { ActionFunctionArgs, useLoaderData } from 'react-router-dom';
-import { z } from 'zod';
+import { useLoaderData, useParams } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { api, query } from '../api';
-import { game, getGameResponse, updateGameRequest } from '../api/game';
 import { A } from '../components/A';
 import { queryClient } from '../main';
 import { RoundView } from '../components/round_view';
+import type { Game } from '../api/game';
 
 export const loader = async ({ params }: { params: { id: string } }) => {
-  return queryClient.fetchQuery({
+  const data = await queryClient.fetchQuery({
     queryFn: () => api.game({ params }),
     queryKey: query.getKeyByAlias('game', { params }),
     staleTime: 1000,
   });
+
+  if (!data) {
+    throw new Response('', { status: 404 });
+  }
+
+  return data;
 };
 
-export const action = async ({ request } : ActionFunctionArgs) => {
+export const action = async ({ request }: ActionFunctionArgs) => {
   // const data = updateGameRequest.safeParse(
   //   Object.fromEntries(await request.formData())
   // );
@@ -32,20 +38,23 @@ export const action = async ({ request } : ActionFunctionArgs) => {
   // } catch (rawError) {
   //   return { _errors: ['Unknown error'] };
   // }
-}
+};
 
 function Game() {
   const { t } = useTranslation();
+  const { id } = useParams();
 
-  const { response_data } = useLoaderData() as z.infer<typeof getGameResponse>;
+  const game = useLoaderData() as Game;
 
-  const team = response_data?.leaderboard.find((team) => team.is_current_team);
-
-  console.log(response_data);
+  const team = game.leaderboard?.find((team) => team.is_current_team);
 
   return (
-    <div className="lg:w-5/6 mx-auto bg-white p-10 lg:rounded-3xl shadow-2xl">
-      <h1 className="flex justify-center text-3xl">{response_data?.name}</h1>
+    <motion.div
+      key={`game-${id}`}
+      layoutId={`game-${id}`}
+      className="lg:w-5/6 w-full bg-white p-10 lg:rounded-3xl shadow-2xl"
+    >
+      <h1 className="flex justify-center text-3xl">{game.name}</h1>
       <div className="flex flex-col w-full mt-5">
         <div className="flex flex-col lg:flex-row w-full">
           <div className="flex flex-col lg:w-1/3">
@@ -74,44 +83,51 @@ function Game() {
               <p className="flex justify-center text-sm text-slate-500 mb-5">
                 {t('Leaderboard of participants')}
               </p>
-              <ol className="text-center">
-                {response_data?.leaderboard.map((team, i) => {
-                  const placement =
-                    {
-                      1: '🥇',
-                      2: '🥈',
-                      3: '🥉',
-                    }[team.place] || `${team.place}. `;
-                  return (
-                    <li>
-                      <span className="text-slate-500">{placement}</span>{' '}
-                      {team.name}
-                    </li>
-                  );
-                })}
-              </ol>
+              {game.leaderboard ? (
+                <ol className="text-center">
+                  {game.leaderboard.map((team) => {
+                    const placement =
+                      {
+                        1: '🥇',
+                        2: '🥈',
+                        3: '🥉',
+                      }[team.place] || `${team.place}. `;
+                    return (
+                      <li key={team.id}>
+                        <span className="text-slate-500">{placement}</span>{' '}
+                        {team.name}
+                      </li>
+                    );
+                  })}
+                </ol>
+              ) : null}
             </div>
           </div>
 
-          <div className="p-5 lg:ml-4 mt-4 lg:mt-0 lg:rounded-xl shadow-sm bg-gray-100 w-full">
+          <motion.div
+            layoutId={`game-image-${id}`}
+            className="p-5 lg:ml-4 mt-4 lg:mt-0 lg:rounded-xl shadow-sm bg-gray-100 w-full"
+          >
             <h1 className="flex justify-center text-xl antialiased uppercase mb-5">
               {t('Description')}
             </h1>
-            <p className="text-slate-500">{response_data?.description}</p>
-          </div>
+            <p className="text-slate-500">{game.description}</p>
+          </motion.div>
         </div>
         <div className="text-2xl p-2 m-2">{t('Rounds')}</div>
-        {response_data?.rounds.map(round => (
-          <RoundView
-            id={round.id}
-            name={round.name}
-            description={round.description ?? ""}
-            datetimeStart={round.datetime_start}
-            datetimeEnd={round.datetime_end}
-          />
-        ))}
+        {game.rounds
+          ? game.rounds.map((round) => (
+              <RoundView
+                name={round.name}
+                description={round.description ?? ''}
+                datetimeStart={round.datetime_start}
+                datetimeEnd={round.datetime_end}
+                id={round.id}
+              />
+            ))
+          : null}
       </div>
-    </div>
+    </motion.div>
   );
 }
 

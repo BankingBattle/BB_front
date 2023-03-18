@@ -8,7 +8,7 @@ export default defineConfig({
     proxy: {
       '/api': {
         changeOrigin: true,
-        target: 'https://bankingbattle.ru',
+        target: 'http://0.0.0.0:8000/',
       },
     },
   },

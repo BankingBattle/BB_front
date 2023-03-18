@@ -14,6 +14,8 @@ export const user = z.object({
   login: z.string().min(3, { message: 'Login must be 3 or more characters' }),
 });
 
+export type User = z.infer<typeof user>;
+
 export const register = login.merge(user).extend({
   admin_key: z.string(),
 });

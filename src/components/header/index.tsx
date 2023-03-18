@@ -90,15 +90,7 @@ export function Header({ isLoggedIn }: Props) {
         {links.map(({ className, ...link }) => (
           <NavLink
             {...link}
-            className={({ isActive }) =>
-              cn(
-                'font-semibold transition-colors',
-                {
-                  'text-purple-500 rounded-md': isActive,
-                },
-                className
-              )
-            }
+            className={cn('font-semibold transition-colors', className)}
           />
         ))}
         <LangChanger />
