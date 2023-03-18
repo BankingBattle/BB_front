@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { round } from '../game';
+import { round } from './index';
 
 export const createRoundError = z
   .object({ message: z.string() })

@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { createRoundSchema } from '../../schemas';
 import { makeApi } from '@zodios/core';
-import { createRoundError } from '../game/errors';
 import { zfd } from "zod-form-data";
+import { createRoundError } from './errors';
 
 export const round = z.object({
   id: z.number(),
