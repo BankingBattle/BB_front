@@ -2,10 +2,12 @@ import { makeApi, Zodios } from '@zodios/core';
 import { ZodiosHooks } from '@zodios/react';
 import { userApi } from './user';
 import { gameApi } from './game';
+import { roundApi } from './round';
 
-const apiDefinition = makeApi([...userApi, ...gameApi]);
+const apiDefinition = makeApi([...userApi, ...gameApi, ...roundApi]);
 
 export const api = new Zodios(import.meta.env.VITE_API_ENDPOINT, apiDefinition);
+
 
 api.axios.interceptors.request.use(
   async (config) => {

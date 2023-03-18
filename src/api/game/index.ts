@@ -1,7 +1,7 @@
 import { makeApi } from '@zodios/core';
 import { z } from 'zod';
-import { createRoundSchema } from '../../schemas';
-import { createGameError, createRoundError } from './errors';
+import { createGameError } from './errors';
+import { round } from '../round';
 
 const leaderboard = z.object({
     id: z.number(),
@@ -10,24 +10,6 @@ const leaderboard = z.object({
     points: z.number(),
     is_current_team: z.boolean(),
 });
-
-export const round = z.object({
-    id: z.number(),
-    name: z.string(),
-    description: z.string().optional(),
-    datetime_start: z.string().datetime(),
-    datetime_end: z.string().datetime(),
-});
-
-export const roundUploadRequest = z.object({
-  file: z.any(),
-  round_id: z.number()
-})
-
-export const roundUploadResponse = z.object({
-  message: z.string().optional(),
-  response_data: z.string().optional()
-})
 
 
 export const game = z.object({
@@ -48,15 +30,7 @@ export const updateGameRequest = z.object({
 export const getGameResponse = z.object({
   message: z.string().optional(),
   response_data: game.optional()
-})
-
-export const getRoundResponse = z.object({
-  message: z.string().optional(),
-  response_data: round.extend({
-    is_active: z.boolean(),
-    game_id: z.number(),
-  }).optional()
-})
+});
 
 
 export const createGameRequest = z.object({
@@ -73,16 +47,6 @@ export const createGameResponse = z.object({
   }).optional()
 });
 
-export const createRoundRequest = createRoundSchema;
-
-export const createRoundResponse = z.object({
-  game_id: z.number(),
-  name: z.string(),
-  description: z.string(),
-  datetime_start: z.string(),
-  datetime_end: z.string(),
-  is_active: z.boolean()
-});
 
 export const gameApi = makeApi([
   {
@@ -111,25 +75,6 @@ export const gameApi = makeApi([
     ]
   },
   {
-    method: 'get',
-    path: '/round/:id',
-    alias: 'round',
-    response: getRoundResponse,
-  },
-  {
-    method: 'put',
-    path: '/round/uploud_data/:id',
-    alias: 'upload_data',
-    response: roundUploadResponse,
-    parameters: [
-      {
-        name: 'upload_data_request',
-        schema: roundUploadRequest,
-        type: 'Body',
-      }
-    ]
-  },
-  {
     method: 'post',
     path: '/game/',
     alias: 'create_game',
@@ -146,26 +91,6 @@ export const gameApi = makeApi([
         status: 400,
         description: 'Create game error',
         schema: createGameError,
-      },
-    ],
-  },
-  {
-    method: 'post',
-    path: '/round/create/',
-    alias: 'create_round',
-    response: createRoundResponse,
-    parameters: [
-      {
-        name: 'create_round_request',
-        schema: createRoundRequest,
-        type: 'Body',
-      }
-    ],
-    errors: [
-      {
-        status: 400,
-        description: 'Create round error',
-        schema: createRoundError,
       },
     ],
   },
