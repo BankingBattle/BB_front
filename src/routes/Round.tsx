@@ -81,6 +81,13 @@ function Round() {
 
   }, []);
 
+  const clearDataContent = () => {
+    return currentRoundData
+      .replaceAll('"', '')
+      .replaceAll('?', '')
+      .trim();
+  }
+
   const chooseFeatureFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = event.target;
     const selectedFiles = files as FileList;
@@ -157,20 +164,31 @@ function Round() {
           <div className="flex flex-col lg:w-1/2 h-full">
 
             <div className="flex flex-row p-5 mb-4 lg:rounded-xl shadow-sm bg-gray-100">
-              <button
-                disabled={!Boolean(currentRoundData)}
-                className="mx-1 my-1 px-3 py-2 rounded-md transition-colors w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white"
-              >
-                <FontAwesomeIcon icon={faArrowDown} />
-                 &nbsp;&nbsp;{t('Features')}
-              </button>
-              <button
-                disabled={!Boolean(currentRoundData)}
-                className="mx-1 my-1 px-3 py-2 rounded-md transition-colors w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white"
-              >
-                <FontAwesomeIcon icon={faArrowDown} />
-                &nbsp;&nbsp;{t('Tests')}
-              </button>
+              <form
+                className="mx-1 my-1 w-1/2"
+                action={`data:application/octet-stream,${clearDataContent()}`}>
+                <button
+                  type="submit"
+                  disabled={!Boolean(currentRoundData)}
+                  className="px-3 py-2 rounded-md transition-colors w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white"
+                >
+                  <FontAwesomeIcon icon={faArrowDown} />
+                  &nbsp;&nbsp;{t('Features')}
+                </button>
+              </form>
+
+              <form
+                className="mx-1 my-1 w-1/2"
+                action="data:application/octet-stream">
+                <button
+                  type="submit"
+                  disabled={!Boolean(currentRoundData)}
+                  className="px-3 py-2 rounded-md transition-colors w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white"
+                >
+                  <FontAwesomeIcon icon={faArrowDown} />
+                  &nbsp;&nbsp;{t('Tests')}
+                </button>
+              </form>
             </div>
 
             <div className="p-5 mb-4 lg:rounded-xl shadow-sm bg-gray-100">
