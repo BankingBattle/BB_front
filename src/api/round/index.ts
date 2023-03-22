@@ -1,31 +1,21 @@
 import { z } from 'zod';
 import { createRoundSchema } from '../../schemas';
 import { makeApi } from '@zodios/core';
-import { zfd } from "zod-form-data";
 import { createRoundError } from './errors';
 
 export const round = z.object({
   id: z.number(),
   name: z.string(),
+  game_id: z.number(),
   description: z.string().optional(),
-  datetime_start: z.string().datetime(),
-  datetime_end: z.string().datetime(),
+  datetime_start: z.string().datetime().nullable(),
+  datetime_end: z.string().datetime().nullable(),
+  is_active: z.boolean().optional(),
 });
 
-export const roundUploadResponse = z.object({
-  message: z.string().optional(),
-  response_data: z.any().optional()
-})
+export type Round = z.infer<typeof round>;
 
-export const getRoundResponse = z.object({
-  message: z.string().optional(),
-  response_data: round.extend({
-    is_active: z.boolean(),
-    game_id: z.number(),
-  }).optional()
-});
-
-export const createRoundRequest = createRoundSchema;
+export const roundUploadResponse = z.string().optional();
 
 export const createRoundResponse = z.object({
   game_id: z.number(),
@@ -33,41 +23,44 @@ export const createRoundResponse = z.object({
   description: z.string(),
   datetime_start: z.string(),
   datetime_end: z.string(),
-  is_active: z.boolean()
+  is_active: z.boolean(),
 });
 
-export const roundUploadRequest = zfd.formData({
-  file: zfd.file(),
-  round_id: zfd.numeric(),
-})
-
-export const roundNoDataResponse = z.object({
-  message: z.string(),
+export const roundUploadRequest = z.object({
+  file: z.instanceof(File),
+  round_id: z.number(),
 });
-
 
 export const roundApi = makeApi([
   // get round
   {
     method: 'get',
-    path: '/round/:id',
+    path: '/round/:id/',
     alias: 'round',
-    response: getRoundResponse,
+    response: round,
   },
 
   // get round data
   {
     method: 'get',
-    path: '/round/data/:id',
-    alias: 'round_data',
-    response: roundNoDataResponse
+    path: '/round/data/:id/',
+    alias: 'roundData',
+    response: z
+      .string()
+      .or(z.object({}))
+      .transform((data) => {
+        if (typeof data === 'string') {
+          return data;
+        }
+        return null;
+      }),
   },
 
   // upload round data
   {
     method: 'put',
     path: '/round/uploud_data/:id/',
-    alias: 'upload_data',
+    alias: 'uploadData',
     response: roundUploadResponse,
     requestFormat: 'form-data',
     parameters: [
@@ -75,23 +68,22 @@ export const roundApi = makeApi([
         name: 'upload_data_request',
         schema: roundUploadRequest,
         type: 'Body',
-      }
+      },
     ],
-
   },
 
   // create round
   {
     method: 'post',
     path: '/round/create/',
-    alias: 'create_round',
-    response: createRoundResponse,
+    alias: 'createRound',
+    response: round,
     parameters: [
       {
         name: 'create_round_request',
-        schema: createRoundRequest,
+        schema: createRoundSchema,
         type: 'Body',
-      }
+      },
     ],
     errors: [
       {
@@ -101,4 +93,4 @@ export const roundApi = makeApi([
       },
     ],
   },
-])
+]);

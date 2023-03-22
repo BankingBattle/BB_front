@@ -21,25 +21,6 @@ export const loader = async ({ params }: { params: { id: string } }) => {
   return data;
 };
 
-export const action = async ({ request }: ActionFunctionArgs) => {
-  // const data = updateGameRequest.safeParse(
-  //   Object.fromEntries(await request.formData())
-  // );
-  //
-  // if (!data.success) {
-  //   return data.error.format()
-  // }
-  //
-  // try {
-  //   await queryClient.fetchQuery({
-  //     queryFn: () => api.patch_game({...data.data}),
-  //     queryKey: query.getKeyByAlias('patch_game'),
-  //   })
-  // } catch (rawError) {
-  //   return { _errors: ['Unknown error'] };
-  // }
-};
-
 function Game() {
   const { t } = useTranslation();
   const { id } = useParams();

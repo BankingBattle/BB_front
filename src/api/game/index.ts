@@ -19,7 +19,7 @@ export const game = z.object({
   description: z.string(),
   is_current_team: z.boolean().optional(),
   leaderboard: leaderboard.optional(),
-  rounds: round.array().optional(),
+  rounds: round.omit({ game_id: true }).array().optional(),
 });
 
 export type Game = z.infer<typeof game>;
@@ -46,13 +46,13 @@ export const gameApi = makeApi([
   },
   {
     method: 'get',
-    path: '/game/:id',
+    path: '/game/:id/',
     alias: 'game',
     response: game,
   },
   {
     method: 'patch',
-    path: '/game/:id',
+    path: '/game/:id/',
     alias: 'patch_game',
     response: game,
     parameters: [

@@ -36,8 +36,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   try {
     const result = await queryClient.fetchQuery({
-      queryFn: () => api.create_round({ ...data.data }),
-      queryKey: query.getKeyByAlias('create_round', {}),
+      queryFn: () => api.createRound({ ...data.data }),
+      queryKey: query.getKeyByAlias('createRound', {}),
     });
 
     if (!result) {
@@ -46,7 +46,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     return redirect(`/manage_rounds/${result.game_id}`);
   } catch (error) {
-    if (isErrorFromAlias(api.api, 'create_round', error)) {
+    if (isErrorFromAlias(api.api, 'createRound', error)) {
       if (error.response.status === 400) {
         return error.response.data as CreateRoundError;
       }
