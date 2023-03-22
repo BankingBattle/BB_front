@@ -32,8 +32,7 @@
     "react-router-dom": "*",
     "react-stately": "*",
     "react-wrap-balancer": "*",
-    "zod": "*",
-    "zod-form-data": "*"
+    "zod": "*"
   },
   "devDependencies": {
     "@react-types/calendar": "^3.1.0",

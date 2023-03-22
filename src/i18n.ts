@@ -78,6 +78,13 @@ const resources = {
       'Start time': 'Начало',
       'End time': 'Окончание',
       Dates: 'Даты',
+      Features: 'Features',
+      Tests: 'Tests',
+      'Upload solution': 'Upload solution',
+      Send: 'Send',
+      'Your team submits': 'Your team submits',
+      Date: 'Date',
+      Filename: 'Filename',
     },
   },
 };
