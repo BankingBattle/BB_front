@@ -30,7 +30,8 @@ const resources = {
       'Your last name': 'Ваша фамилия',
       'Unknown error': 'Неизвестная ошибка',
       'Passwords must match': 'Пароли должны совпадать',
-      'No active account found with the given credentials': 'Аккаунт не найден',
+      'No active account found with the given credentials':
+        'Неправильный логин или пароль',
       'Invalid email': 'Неверный E-Mail',
       'Password must be 8 or more characters':
         'Пароль не может быть короче 8 символов',
