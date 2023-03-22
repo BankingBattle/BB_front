@@ -21,8 +21,6 @@ import { queryClient } from '../main';
 import { api, query } from '../api';
 import type { User } from '../api/user';
 
-import { GamesList } from '../components/GamesList';
-
 export async function loader() {
   return queryClient
     .fetchQuery({
@@ -196,7 +194,6 @@ function Profile() {
           </div>
         </div>
       </Form>
-      <GamesList />
     </div>
   );
 }
