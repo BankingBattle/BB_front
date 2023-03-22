@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const createGameSchema = z.object({
   name: z.string().min(1),
-  description: z.string()
+  description: z.string(),
 });
 
 export const createRoundSchema = z.object({
@@ -10,7 +10,7 @@ export const createRoundSchema = z.object({
   name: z.string(),
   description: z.string(),
   datetime_start: z.string(),
-  datetime_end: z.string()
+  datetime_end: z.string(),
 });
 
 export const registerSchema = z
@@ -69,8 +69,3 @@ export const changeDataSchema = z
     message: 'Password must be 8 or more characters',
     path: ['password'],
   });
-
-export type ChangeDataError = z.ZodFormattedError<
-  z.infer<typeof changeDataSchema>,
-  string
->;

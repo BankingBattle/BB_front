@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+import cn from 'classnames';
 import { useTranslation } from 'react-i18next';
 import {
   ActionFunctionArgs,
@@ -6,23 +8,20 @@ import {
   useActionData,
   useLoaderData,
 } from 'react-router-dom';
-import { z } from 'zod';
-import { useEffect, useState } from 'react';
 import {
   faEdit,
   faSave,
   faXmarkCircle,
 } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import cn from 'classnames';
-import { ZodiosMatchingErrorsByAlias } from '@zodios/core/lib/zodios.types';
 import { isErrorFromAlias } from '@zodios/core';
 
+import { changeDataSchema } from '../schemas';
 import { queryClient } from '../main';
 import { api, query } from '../api';
-import { user } from '../api/user';
+import type { User } from '../api/user';
+
 import { GamesList } from '../components/GamesList';
-import { ChangeDataError, changeDataSchema } from '../schemas';
 
 export async function loader() {
   return queryClient
@@ -48,15 +47,10 @@ export async function action({ request }: ActionFunctionArgs) {
       queryFn: () => api.update(data.data),
       queryKey: query.getKeyByAlias('me'),
     });
-  } catch (rawError) {
-    if (isErrorFromAlias(api.api, 'update', rawError)) {
-      const error = rawError as ZodiosMatchingErrorsByAlias<
-        typeof api.api,
-        'update'
-      >;
-
+  } catch (error) {
+    if (isErrorFromAlias(api.api, 'update', error)) {
       if (error.response.status === 400) {
-        return error.response.data as ChangeDataError;
+        return error.response.data;
       }
     }
 
@@ -66,11 +60,14 @@ export async function action({ request }: ActionFunctionArgs) {
   return null;
 }
 
+export type ProfileAction = typeof action;
+
 function Profile() {
-  const errors = useActionData() as FormError<typeof action>;
-  console.log(errors);
   const { t } = useTranslation();
-  const data = useLoaderData() as z.infer<typeof user>;
+
+  const errors = useActionData() as FormError<ProfileAction>;
+  const data = useLoaderData() as User;
+
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {

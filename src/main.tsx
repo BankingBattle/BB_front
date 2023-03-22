@@ -2,23 +2,27 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 
 import Error from './routes/Error';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  LoaderFunction,
+  RouterProvider,
+} from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import './i18n';
 import './main.css';
 
 import App, { loader as appLoader } from './routes/App';
-import Home, {loader as homeLoader} from './routes/Home';
+import Home, { loader as homeLoader } from './routes/Home';
 import Game, { loader as gameLoader } from './routes/Game';
-import Round, { loader as roundLoader }from './routes/Round';
+import Round, { loader as roundLoader } from './routes/Round';
 
 import Login, { action as loginAction } from './routes/Login';
-import CreateGame, {action as createGameAction } from './routes/CreateGame';
+import CreateGame, { action as createGameAction } from './routes/CreateGame';
 
 import ManageRounds, {
   loader as createRoundLoader,
-  action as createRoundAction
+  action as createRoundAction,
 } from './routes/ManageRounds';
 
 import Profile, {
@@ -28,12 +32,10 @@ import Profile, {
 
 import Register, {
   action as registerAction,
-  loader as registerLoader
+  loader as registerLoader,
 } from './routes/Register';
 
-
 export const queryClient = new QueryClient();
-
 
 const router = createBrowserRouter([
   {
@@ -45,48 +47,53 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
+        errorElement: <Error />,
         loader: homeLoader,
       },
       {
         path: 'create',
         element: <CreateGame />,
+        errorElement: <Error />,
         action: createGameAction,
       },
       {
         path: 'manage_rounds/:id',
         element: <ManageRounds />,
-        // @ts-ignore
-        loader: createRoundLoader,
+        errorElement: <Error />,
+        loader: createRoundLoader as unknown as LoaderFunction,
         action: createRoundAction,
       },
       {
         path: 'login',
         element: <Login />,
+        errorElement: <Error />,
         action: loginAction,
       },
       {
         path: 'register',
         element: <Register />,
+        errorElement: <Error />,
         loader: registerLoader,
         action: registerAction,
       },
       {
         path: 'profile',
         element: <Profile />,
+        errorElement: <Error />,
         loader: profileLoader,
         action: profileAction,
       },
       {
         path: 'game/:id',
         element: <Game />,
-        // @ts-ignore
-        loader: gameLoader,
+        errorElement: <Error />,
+        loader: gameLoader as unknown as LoaderFunction,
       },
       {
         path: 'round/:id',
         element: <Round />,
-        // @ts-ignore
-        loader: roundLoader
+        errorElement: <Error />,
+        loader: roundLoader as unknown as LoaderFunction,
       },
     ],
   },

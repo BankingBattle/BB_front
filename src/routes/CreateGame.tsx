@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { isErrorFromAlias } from '@zodios/core';
 import { ZodiosMatchingErrorsByAlias } from '@zodios/core/lib/zodios.types';
 
-export async function action({ request } : ActionFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const data = createGameSchema.safeParse(
     Object.fromEntries(await request.formData())
   );
@@ -24,11 +24,11 @@ export async function action({ request } : ActionFunctionArgs) {
       queryKey: query.getKeyByAlias('create_game', {}),
     });
 
-    if (!result.response_data) {
+    if (!result) {
       return { _errors: ['Unknown error'] };
     }
 
-    return redirect(`/manage_rounds/${result.response_data.id}`);
+    return redirect(`/manage_rounds/${result.id}`);
   } catch (rawError) {
     if (isErrorFromAlias(api.api, 'create_game', rawError)) {
       const error = rawError as ZodiosMatchingErrorsByAlias<
@@ -49,8 +49,8 @@ function CreateGame() {
   const { t } = useTranslation();
   const errors = (useActionData() || {}) as FormError<typeof action>;
 
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
 
   return (
     <>
@@ -74,7 +74,7 @@ function CreateGame() {
             id="name"
             name="name"
             value={name}
-            onChange={e => setName(e.target.value)}
+            onChange={(e) => setName(e.target.value)}
             className="block w-full bg-white border-gray-100 border-2"
             placeholder={t('Name')}
           />
@@ -83,7 +83,7 @@ function CreateGame() {
             id="description"
             name="description"
             value={description}
-            onChange={e => setDescription(e.target.value)}
+            onChange={(e) => setDescription(e.target.value)}
             className="block w-full bg-white border-gray-100 border-2"
             placeholder={t('Description')}
           />
@@ -95,7 +95,6 @@ function CreateGame() {
         >
           {t('Create')}
         </button>
-
       </Form>
     </>
   );

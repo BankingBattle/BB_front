@@ -1,7 +1,9 @@
-import { Outlet, useLoaderData } from 'react-router-dom';
+import { Outlet, useLoaderData, useLocation } from 'react-router-dom';
 import { Header } from '../components/header';
 import { api, query } from '../api';
 import { queryClient } from '../main';
+import { useTranslation } from 'react-i18next';
+import { I18nProvider } from 'react-aria';
 
 export const loader = async () => {
   return queryClient
@@ -15,14 +17,19 @@ export const loader = async () => {
 
 function App() {
   const data = useLoaderData();
+  const location = useLocation();
+  const { i18n } = useTranslation();
 
   return (
-    <>
+    <I18nProvider locale={i18n.language}>
       <Header isLoggedIn={Boolean(data)} />
-      <main className="py-10 container mx-auto flex flex-col items-center">
+      <main
+        key={location.pathname}
+        className="py-10 container mx-auto flex flex-col items-center"
+      >
         <Outlet />
       </main>
-    </>
+    </I18nProvider>
   );
 }
 
