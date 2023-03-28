@@ -21,7 +21,6 @@ jobs:
       - name: rsync
         uses: burnett01/rsync-deployments@5.2.1
         with:
-          tool-cache: true
           switches: -avzr --delete
           path: dist/
           remote_host: ${{ secrets.HOST }}
