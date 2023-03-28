@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLoaderData } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -24,9 +24,12 @@ interface IFileState {
   error: string;
 }
 
+type RoundState = 'unknown' | 'default' | 'running' | 'finished';
+
 function Round() {
   const { t } = useTranslation();
   const round = useLoaderData() as RoundType;
+
   const { data: game } = query.useGame({ params: { id: round.game_id } });
   const { data: roundData } = query.useRoundData({
     params: { id: round.id },
@@ -35,6 +38,7 @@ function Round() {
     params: { id: round.id },
   });
 
+  const [roundState, setRoundState] = useState('unknown' as RoundState);
   const [featureFileState, setFeatureFileState] = useState({
     file: {} as File,
     chosen: false,
@@ -42,6 +46,23 @@ function Round() {
     uploaded: false,
     error: '',
   } as IFileState);
+
+
+  useEffect(() => {
+    if (round.datetime_start != null && round.datetime_end != null) {
+      let current = new Date();
+      let start = new Date(round.datetime_start);
+      let end = new Date(round.datetime_end);
+
+      if (current < start) {
+        setRoundState('default');
+      } else if (current >= start && current <= end) {
+        setRoundState('running');
+      } else {
+        setRoundState('finished');
+      }
+    }
+  }, []);
 
   const clearDataContent = () => {
     return roundData?.replace(/\?|\"/g, '');
@@ -74,9 +95,9 @@ function Round() {
       <div className="flex justify-center">
         <div
           className={`w-5 h-5 rounded-2xl mt-2 mr-2 bg-${
-            round.is_active ? 'green' : 'amber'
+            roundState === ('running' as RoundState) ? 'green' : 'amber'
           }-500`}
-          title={round.is_active ? 'Active' : 'Not active'}
+          title={roundState === ('running' as RoundState) ? 'Active' : 'Not active'}
         />
         <h1 className="text-3xl">
           {t('Round')}: {round.name}
