@@ -86,6 +86,7 @@ const resources = {
       'Your team submits': 'Your team submits',
       Date: 'Date',
       Filename: 'Filename',
+      'Delete game': 'Удалить игру',
     },
   },
 };

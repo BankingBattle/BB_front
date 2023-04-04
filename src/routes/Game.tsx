@@ -29,6 +29,23 @@ function Game() {
 
   const team = game.leaderboard?.find((team) => team.is_current_team);
 
+  const deleteGame = async () => {
+    try {
+      const response = await fetch(`/game/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({is_active: false}),
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access')}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      console.log(response);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
     <motion.div
       key={`game-${id}`}
@@ -36,6 +53,11 @@ function Game() {
       className="lg:w-5/6 w-full bg-white p-10 lg:rounded-3xl shadow-2xl"
     >
       <h1 className="flex justify-center text-3xl">{game.name}</h1>
+      <button
+        onClick={deleteGame}
+        className="mx-1 my-1 px-3 py-2 rounded-md transition-colors my-8 bg-purple-500 hover:bg-purple-600 text-white">
+        {t('Delete game')}
+      </button>
       <div className="flex flex-col w-full mt-5">
         <div className="flex flex-col lg:flex-row w-full">
           <div className="flex flex-col lg:w-1/3">
