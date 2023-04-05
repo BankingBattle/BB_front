@@ -87,6 +87,8 @@ const resources = {
       Date: 'Date',
       Filename: 'Filename',
       'Delete game': 'Удалить игру',
+      'Game deleted': 'Игра удалена',
+      'No rounds': 'Раундов нет'
     },
   },
 };

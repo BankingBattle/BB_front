@@ -31,16 +31,21 @@ function Game() {
 
   const deleteGame = async () => {
     try {
-      const response = await fetch(`/game/${id}`, {
+      const response = await fetch(`/api/1.0.0/game/${id}/`, {
         method: 'PATCH',
-        body: JSON.stringify({is_active: false}),
+        body: JSON.stringify({is_active: "false"}),
         headers: {
           Authorization: `Bearer ${localStorage.getItem('access')}`,
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'application/json',
         },
       });
 
+      if (response.status === 200) {
+        alert(t('Game deleted'));
+      }
+
       console.log(response);
+
     } catch (err) {
       console.log(err);
     }
@@ -53,11 +58,6 @@ function Game() {
       className="lg:w-5/6 w-full bg-white p-10 lg:rounded-3xl shadow-2xl"
     >
       <h1 className="flex justify-center text-3xl">{game.name}</h1>
-      <button
-        onClick={deleteGame}
-        className="mx-1 my-1 px-3 py-2 rounded-md transition-colors my-8 bg-purple-500 hover:bg-purple-600 text-white">
-        {t('Delete game')}
-      </button>
       <div className="flex flex-col w-full mt-5">
         <div className="flex flex-col lg:flex-row w-full">
           <div className="flex flex-col lg:w-1/3">
@@ -129,6 +129,18 @@ function Game() {
               />
             ))
           : null}
+        {!game.rounds?.length &&
+          <div className="ml-4 mb-4 text-gray-500">
+            {t('No rounds')}
+          </div>}
+      </div>
+      <div>
+        <hr />
+        <button
+          onClick={deleteGame}
+          className="mx-1 mt-4 px-3 py-2 rounded-md transition-colors bg-red-500 hover:bg-red-600 text-white">
+          {t('Delete game')}
+        </button>
       </div>
     </motion.div>
   );
