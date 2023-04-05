@@ -41,7 +41,7 @@ function Game() {
       });
 
       if (response.status === 200) {
-        alert(t('Game deleted'));
+        window.location.href = "/";
       }
 
       console.log(response);
