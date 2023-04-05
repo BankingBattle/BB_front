@@ -139,8 +139,6 @@ function Round() {
           <div className="flex flex-col lg:w-1/2 h-full">
             <div className="flex flex-row p-5 mb-4 lg:rounded-xl shadow-sm bg-gray-100">
                 <a
-                  href="#"
-                  download="data.csv"
                   onClick={downloadData}
                   className={`px-3 py-2 rounded-md transition-colors w-full ${round ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-300"} text-white`}
                 >
