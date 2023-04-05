@@ -7,6 +7,7 @@ import { api, query } from '../api';
 import { queryClient } from '../main';
 import type { Round as RoundType } from '../api/round';
 import { A } from '../components/A';
+import { Submit } from '../models/Submit';
 
 export const loader = async ({ params }: { params: { id: string } }) => {
   return queryClient.fetchQuery({
@@ -65,7 +66,8 @@ function Round() {
   }, []);
 
   const clearDataContent = () => {
-    return roundData?.replace(/\?|\"/g, '');
+    console.log(roundData);
+    return roundData?.replace(/\?|\"/g, '') ?? "";
   };
 
   const chooseFeatureFile = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,6 +91,20 @@ function Round() {
       file: featureFileState.file,
     });
   };
+
+  const downloadData = () => {
+    const text = clearDataContent();
+    const filename = "data.csv";
+    const element = document.createElement('a');
+
+    element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+    element.style.display = 'none';
+
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  }
 
   return (
     <div className="lg:w-full mx-auto bg-white py-5 lg:p-10 lg:rounded-3xl shadow-2xl">
@@ -122,33 +138,23 @@ function Round() {
         <div className="flex flex-col lg:flex-row w-full">
           <div className="flex flex-col lg:w-1/2 h-full">
             <div className="flex flex-row p-5 mb-4 lg:rounded-xl shadow-sm bg-gray-100">
-              <form
-                className="mx-1 my-1 w-1/2"
-                action={`data:application/octet-stream,${clearDataContent()}`}
-              >
-                <button
-                  type="submit"
-                  disabled={Boolean(roundData)}
-                  className="px-3 py-2 rounded-md transition-colors w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white"
+                <a
+                  href="#"
+                  download="data.csv"
+                  onClick={downloadData}
+                  className={`px-3 py-2 rounded-md transition-colors w-full ${round ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-300"} text-white`}
                 >
                   <FontAwesomeIcon icon={faArrowDown} />
                   &nbsp;&nbsp;{t('Features')}
-                </button>
-              </form>
-
-              <form
-                className="mx-1 my-1 w-1/2"
-                action={`data:application/octet-stream,${clearDataContent()}`}
-              >
-                <button
+                </a>
+                &nbsp;
+                <a
                   type="submit"
-                  disabled={!roundData}
-                  className="px-3 py-2 rounded-md transition-colors w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white"
+                  className={`px-3 py-2 rounded-md transition-colors w-full ${roundData ? "bg-orange-500 hover:bg-orange-600" : "bg-gray-300"} text-white`}
                 >
                   <FontAwesomeIcon icon={faArrowDown} />
                   &nbsp;&nbsp;{t('Tests')}
-                </button>
-              </form>
+                </a>
             </div>
 
             <div className="p-5 mb-4 lg:rounded-xl shadow-sm bg-gray-100">
@@ -222,32 +228,37 @@ function Round() {
             <h1 className="flex justify-center text-xl antialiased uppercase mb-5">
               {t('Your team submits')}
             </h1>
-            <table className="table-fixed lg:w-full border-separate border-spacing-y-6 border-spacing-x-4">
-              <thead className="border-b border-gray-500 text-left">
-                <tr>
-                  <th className="w-6">ID</th>
-                  <th>{t('Date')}</th>
-                  <th>{t('Filename')}</th>
-                  <th>{t('Result')}</th>
-                  <th className="w-24"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {mockSubmits.map((submit) => (
-                  <tr key={submit.id} className="whitespace-nowrap font-medium">
-                    <td>{submit.id}</td>
-                    <td>{submit.date}</td>
-                    <td>{submit.filename}</td>
-                    <td>{submit.result}</td>
-                    <td>
-                      <button className="my-1 px-3 py-2 rounded-md bg-purple-500 hover:bg-purple-600 text-white">
-                        Download
-                      </button>
-                    </td>
+            {mockSubmits.length ?
+              <table className="table-fixed lg:w-full border-separate border-spacing-y-6 border-spacing-x-4">
+                <thead className="border-b border-gray-500 text-left">
+                  <tr>
+                    <th className="w-6">ID</th>
+                    <th>{t('Date')}</th>
+                    <th>{t('Filename')}</th>
+                    <th>{t('Result')}</th>
+                    <th className="w-24"></th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {mockSubmits.map((submit) => (
+                    <tr key={submit.id} className="whitespace-nowrap font-medium">
+                      <td>{submit.id}</td>
+                      <td>{submit.date}</td>
+                      <td>{submit.filename}</td>
+                      <td>{submit.result}</td>
+                      <td>
+                        <button className="my-1 px-3 py-2 rounded-md bg-purple-500 hover:bg-purple-600 text-white">
+                          Download
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              : <div className="w-full text-center items-center text-gray-500">
+                No submits yet
+              </div>
+            }
           </div>
         </div>
       </div>
@@ -257,23 +268,4 @@ function Round() {
 
 export default Round;
 
-const mockSubmits = [
-  {
-    id: 1,
-    date: '2022-02-24 05:14',
-    filename: 'test1.go',
-    result: '4',
-  },
-  {
-    id: 2,
-    date: '2022-02-24 05:28',
-    filename: 'test2.go',
-    result: '18',
-  },
-  {
-    id: 3,
-    date: '2022-02-24 06:03',
-    filename: 'test3.go',
-    result: '33',
-  },
-];
+const mockSubmits = [] as Submit[];
