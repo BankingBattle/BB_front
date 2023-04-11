@@ -80,7 +80,7 @@ const resources = {
       'End time': 'Окончание',
       Dates: 'Даты',
       Features: 'Features',
-      Tests: 'Tests',
+      Facts: 'Facts',
       'Upload solution': 'Upload solution',
       Send: 'Send',
       'Your team submits': 'Your team submits',

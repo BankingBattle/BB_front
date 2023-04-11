@@ -151,7 +151,7 @@ function Round() {
                   className={`px-3 py-2 rounded-md transition-colors w-full ${roundData ? "bg-orange-500 hover:bg-orange-600" : "bg-gray-300"} text-white`}
                 >
                   <FontAwesomeIcon icon={faArrowDown} />
-                  &nbsp;&nbsp;{t('Tests')}
+                  &nbsp;&nbsp;{t('Facts')}
                 </a>
             </div>
 
@@ -196,9 +196,9 @@ function Round() {
 
               <br />
 
-              {/* TEST UPLOADING */}
+              {/* FACTS UPLOADING */}
               <div>
-                <label>Upload tests (*.csv)</label>
+                <label>Upload facts (*.csv)</label>
                 <input
                   type="file"
                   disabled={true}
