@@ -8,6 +8,7 @@ import { queryClient } from '../main';
 import type { Round as RoundType } from '../api/round';
 import { A } from '../components/A';
 import { Submit } from '../models/Submit';
+import { setActTimeout } from '@tanstack/react-query/build/lib/__tests__/utils';
 
 export const loader = async ({ params }: { params: { id: string } }) => {
   return queryClient.fetchQuery({
@@ -16,6 +17,14 @@ export const loader = async ({ params }: { params: { id: string } }) => {
     staleTime: 1000,
   });
 };
+
+const formatCountdown = (seconds: number) => {
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  return `${days}d ${hours % 24}h ${minutes % 60}m ${seconds % 60}s`;
+}
 
 interface IFileState {
   file: File;
@@ -48,6 +57,10 @@ function Round() {
     error: '',
   } as IFileState);
 
+  const adjDatetimeStart = new Date(round.datetime_start ?? "")
+    .toLocaleString("ru");
+  const adjDatetimeEnd = new Date(round.datetime_end ?? "").toLocaleString("ru");
+  const [countdown, setCountdown] = useState(-1);
 
   useEffect(() => {
     if (round.datetime_start != null && round.datetime_end != null) {
@@ -61,6 +74,14 @@ function Round() {
         setRoundState('running');
       } else {
         setRoundState('finished');
+      }
+
+      // Запуск обратного отсчета если раунд еще не начался.
+      if (current < start) {
+        setInterval(() => {
+          let secondsLeft = Math.round(start.getTime() / 1000 - new Date().getTime() / 1000);
+          setCountdown(secondsLeft);
+        }, 1000);
       }
     }
   }, []);
@@ -137,6 +158,18 @@ function Round() {
       <div className="flex flex-col w-full mt-5">
         <div className="flex flex-col lg:flex-row w-full">
           <div className="flex flex-col lg:w-1/2 h-full">
+            <div className="flex flex-col p-5 mb-4 lg:rounded-xl shadow-sm bg-gray-100">
+              <div>{adjDatetimeStart} - {adjDatetimeEnd}</div>
+              <br/>
+              {countdown >= 0
+                && <div>
+                  {t('Starts in:')}
+                  <div className="text-xl">{formatCountdown(countdown)}</div>
+                </div>}
+              {roundState == 'running' && <div>Round started</div>}
+              {roundState == 'finished' && <div>Round is over</div>}
+            </div>
+
             <div className="flex flex-row p-5 mb-4 lg:rounded-xl shadow-sm bg-gray-100">
                 <a
                   onClick={downloadData}
@@ -223,7 +256,6 @@ function Round() {
               </button>
             </div>
           </div>
-
           <div className="p-5 lg:ml-4 mt-4 lg:mt-0 lg:rounded-xl shadow-sm bg-gray-100 w-full">
             <h1 className="flex justify-center text-xl antialiased uppercase mb-5">
               {t('Your team submits')}
@@ -231,28 +263,28 @@ function Round() {
             {mockSubmits.length ?
               <table className="table-fixed lg:w-full border-separate border-spacing-y-6 border-spacing-x-4">
                 <thead className="border-b border-gray-500 text-left">
-                  <tr>
-                    <th className="w-6">ID</th>
-                    <th>{t('Date')}</th>
-                    <th>{t('Filename')}</th>
-                    <th>{t('Result')}</th>
-                    <th className="w-24"></th>
-                  </tr>
+                <tr>
+                  <th className="w-6">ID</th>
+                  <th>{t('Date')}</th>
+                  <th>{t('Filename')}</th>
+                  <th>{t('Result')}</th>
+                  <th className="w-24"></th>
+                </tr>
                 </thead>
                 <tbody>
-                  {mockSubmits.map((submit) => (
-                    <tr key={submit.id} className="whitespace-nowrap font-medium">
-                      <td>{submit.id}</td>
-                      <td>{submit.date}</td>
-                      <td>{submit.filename}</td>
-                      <td>{submit.result}</td>
-                      <td>
-                        <button className="my-1 px-3 py-2 rounded-md bg-purple-500 hover:bg-purple-600 text-white">
-                          Download
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                {mockSubmits.map((submit) => (
+                  <tr key={submit.id} className="whitespace-nowrap font-medium">
+                    <td>{submit.id}</td>
+                    <td>{submit.date}</td>
+                    <td>{submit.filename}</td>
+                    <td>{submit.result}</td>
+                    <td>
+                      <button className="my-1 px-3 py-2 rounded-md bg-purple-500 hover:bg-purple-600 text-white">
+                        Download
+                      </button>
+                    </td>
+                  </tr>
+                ))}
                 </tbody>
               </table>
               : <div className="w-full text-center items-center text-gray-500">
