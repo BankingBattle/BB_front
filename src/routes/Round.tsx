@@ -140,7 +140,8 @@ function Round() {
             <div className="flex flex-row p-5 mb-4 lg:rounded-xl shadow-sm bg-gray-100">
                 <a
                   onClick={downloadData}
-                  className={`px-3 py-2 rounded-md transition-colors w-full ${round ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-300"} text-white`}
+                  title={roundData ? "" : t('Data is not available at current period')}
+                  className={`px-3 py-2 rounded-md transition-colors w-full ${roundData ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-300"} text-white`}
                 >
                   <FontAwesomeIcon icon={faArrowDown} />
                   &nbsp;&nbsp;{t('Features')}
@@ -148,6 +149,7 @@ function Round() {
                 &nbsp;
                 <a
                   type="submit"
+                  title={roundData ? "" : t('Data is not available at current period')}
                   className={`px-3 py-2 rounded-md transition-colors w-full ${roundData ? "bg-orange-500 hover:bg-orange-600" : "bg-gray-300"} text-white`}
                 >
                   <FontAwesomeIcon icon={faArrowDown} />

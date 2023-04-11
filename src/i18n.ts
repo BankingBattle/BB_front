@@ -88,7 +88,8 @@ const resources = {
       Filename: 'Filename',
       'Delete game': 'Удалить игру',
       'Game deleted': 'Игра удалена',
-      'No rounds': 'Раундов нет'
+      'No rounds': 'Раундов нет',
+      'Data is not available at current period': 'Нельзя скачать данные в данный период',
     },
   },
 };
