@@ -83,6 +83,13 @@ function Round() {
           setCountdown(secondsLeft);
         }, 1000);
       }
+      // Запуск обратного отсчета до окончания раунда, если он начался
+      if (current >= start && current < end) {
+        setInterval(() => {
+          let secondsLeft = Math.round(end.getTime() / 1000 - new Date().getTime() / 1000);
+          setCountdown(secondsLeft);
+        }, 1000);
+      }
     }
   }, []);
 
@@ -163,7 +170,7 @@ function Round() {
               <br/>
               {countdown >= 0
                 && <div>
-                  {t('Starts in:')}
+                  {roundState == 'running' ? t('Ends in') : t('Starts in')}{':'}
                   <div className="text-xl">{formatCountdown(countdown)}</div>
                 </div>}
               {roundState == 'running' && <div>Round started</div>}
