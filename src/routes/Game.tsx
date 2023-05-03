@@ -6,6 +6,7 @@ import { A } from '../components/A';
 import { queryClient } from '../main';
 import { RoundView } from '../components/round_view';
 import type { Game } from '../api/game';
+import { useEffect, useState } from 'react';
 
 export const loader = async ({ params }: { params: { id: string } }) => {
   const data = await queryClient.fetchQuery({
@@ -28,6 +29,23 @@ function Game() {
   const game = useLoaderData() as Game;
 
   const team = game.leaderboard?.find((team) => team.is_current_team);
+  const [ isAdmin, setIsAdmin ] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/1.0.0/user/me', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('access')}`
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setIsAdmin(data.response_data.is_admin);
+        } else {
+          console.log('error get me: ' + data.message);
+        }
+      })
+  }, []);
 
   const deleteGame = async () => {
     try {
@@ -136,11 +154,11 @@ function Game() {
       </div>
       <div>
         <hr />
-        <button
+        {isAdmin && <button
           onClick={deleteGame}
           className="mx-1 mt-4 px-3 py-2 rounded-md transition-colors bg-red-500 hover:bg-red-600 text-white">
           {t('Delete game')}
-        </button>
+        </button>}
       </div>
     </motion.div>
   );
