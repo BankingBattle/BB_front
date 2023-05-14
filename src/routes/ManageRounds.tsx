@@ -40,6 +40,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       queryKey: query.getKeyByAlias('createRound', {}),
     });
 
+    if(result.message) {
+      return { _errors: [result.message] };
+    }
+
     if (!result) {
       return { _errors: ['Unknown error'] };
     }
@@ -59,7 +63,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 function ManageRounds() {
   const { t } = useTranslation();
 
-  const [round, setRound] = useState({} as Round);
+  const [round, setRound] = useState({
+    name: '',
+    datetimeStart: '',
+    datetimeEnd: '',
+  } as Round);
 
   const [file, setFile] = useState({} as File);
   const [fileSelected, setFileSelected] = useState(false);
@@ -187,14 +195,14 @@ function ManageRounds() {
           <div>
             {game.rounds?.map((round) => (
               <RoundView
-                key={round.id}
-                id={round.id}
-                name={round.name}
+                key={round.id?.toString()}
+                id={round.id ?? -1}
+                name={round.name ?? ""}
                 description={round.description ?? 'No description'}
                 datetimeStart={round.datetime_start}
                 datetimeEnd={round.datetime_end}
                 editable={false}
-                deleteCallback={() => remove(round.id)}
+                deleteCallback={() => remove(round.id ?? -1)}
               />
             ))}
           </div>

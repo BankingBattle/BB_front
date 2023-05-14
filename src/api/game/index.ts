@@ -14,12 +14,14 @@ const leaderboard = z
   .array();
 
 export const game = z.object({
-  id: z.number(),
-  name: z.string(),
-  description: z.string(),
+  id: z.number().optional(),
+  name: z.string().optional(),
+  description: z.string().optional(),
   is_current_team: z.boolean().optional(),
   leaderboard: leaderboard.optional(),
   rounds: round.omit({ game_id: true }).array().optional(),
+  participating: z.boolean().optional(),
+  message: z.string().optional()
 });
 
 export type Game = z.infer<typeof game>;

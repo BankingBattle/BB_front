@@ -40,12 +40,12 @@ function Round() {
   const { t } = useTranslation();
   const round = useLoaderData() as RoundType;
 
-  const { data: game } = query.useGame({ params: { id: round.game_id } });
+  const { data: game } = query.useGame({ params: { id: round.game_id ?? -1 } });
   const { data: roundData } = query.useRoundData({
-    params: { id: round.id },
+    params: { id: round.id ?? -1 },
   });
   const { mutate: uploadData, error: _error } = query.useUploadData({
-    params: { id: round.id },
+    params: { id: round.id ?? -1 },
   });
 
   const [roundState, setRoundState] = useState('unknown' as RoundState);
@@ -115,7 +115,7 @@ function Round() {
     }
 
     await uploadData({
-      round_id: round.id,
+      round_id: round.id ?? -1,
       file: featureFileState.file,
     });
   };

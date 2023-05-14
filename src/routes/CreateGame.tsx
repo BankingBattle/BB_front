@@ -24,6 +24,10 @@ export async function action({ request }: ActionFunctionArgs) {
       queryKey: query.getKeyByAlias('create_game', {}),
     });
 
+    if(result.message) {
+      return { _errors: [result.message] };
+    }
+
     if (!result) {
       return { _errors: ['Unknown error'] };
     }
@@ -64,7 +68,7 @@ function CreateGame() {
         {'_errors' in errors &&
           errors._errors.map((error) => (
             <p key={error} className="text-red-600">
-              {t(error)}
+              {error}
             </p>
           ))}
 

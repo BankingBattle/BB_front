@@ -32,6 +32,7 @@ function Game() {
   const [ isAdmin, setIsAdmin ] = useState(false);
 
   useEffect(() => {
+    console.log(game.participating);
     fetch('/api/1.0.0/user/me', {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('access')}`
@@ -46,6 +47,36 @@ function Game() {
         }
       })
   }, []);
+
+  const enterGame = async () => {
+    console.log('here');
+    try {
+      const response = await fetch(`/api/1.0.0/team/current`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access')}`
+        }
+      });
+
+      if (response.status !== 200) {
+        console.log('Fail');
+        return;
+      }
+
+      const data = await response.json();
+
+
+      if (data.status_code === 404) {
+        // TODO handle
+        window.location.href = "/";
+      } else {
+        // TODO handle
+      }
+
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
   const deleteGame = async () => {
     try {
@@ -139,11 +170,12 @@ function Game() {
         {game.rounds
           ? game.rounds.map((round) => (
               <RoundView
-                name={round.name}
+                key={round.id?.toString()}
+                name={round.name ?? ''}
                 description={round.description ?? ''}
                 datetimeStart={round.datetime_start}
                 datetimeEnd={round.datetime_end}
-                id={round.id}
+                id={round.id ?? -1}
               />
             ))
           : null}
@@ -158,6 +190,11 @@ function Game() {
           onClick={deleteGame}
           className="mx-1 mt-4 px-3 py-2 rounded-md transition-colors bg-red-500 hover:bg-red-600 text-white">
           {t('Delete game')}
+        </button>}
+        {!game.participating && <button
+          onClick={enterGame}
+          className="mx-1 mt-4 px-3 py-2 rounded-md transition-colors bg-blue-500 hover:bg-blue-600 text-white">
+          {t('Participate')}
         </button>}
       </div>
     </motion.div>
