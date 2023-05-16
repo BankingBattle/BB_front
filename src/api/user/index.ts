@@ -1,6 +1,8 @@
 import { makeApi } from '@zodios/core';
 import { z } from 'zod';
-import { registerError } from './errors';
+import { createTeamError, registerError } from './errors';
+import { createTeamSchema } from '../../schemas';
+import { createGameError } from '../game/errors';
 
 export const login = z.object({
   email: z.string().email(),
@@ -13,6 +15,15 @@ export const user = z.object({
   last_name: z.string(),
   login: z.string().min(3, { message: 'Login must be 3 or more characters' }),
 });
+
+export const teamApplicationResponse = z.object({
+  success: z.boolean(),
+  status_code: z.number(),
+  message: z.string(),
+  response_data: z.object({
+    success: z.boolean()
+  })
+})
 
 export type User = z.infer<typeof user>;
 
@@ -134,6 +145,26 @@ export const userApi = makeApi([
       },
     ],
     response: access,
+  },
+  {
+    method: 'post',
+    path: '/team/application/',
+    alias: 'create_team',
+    parameters: [
+      {
+        name: 'team',
+        schema: createTeamSchema,
+        type: 'Body'
+      }
+    ],
+    response: teamApplicationResponse,
+    errors: [
+      {
+        status: 400,
+        description: 'Create team error',
+        schema: createTeamError,
+      },
+    ],
   },
   {
     method: 'get',

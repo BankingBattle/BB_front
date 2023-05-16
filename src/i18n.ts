@@ -92,7 +92,9 @@ const resources = {
       'Data is not available at current period': 'Нельзя скачать данные в данный период',
       'Starts in': 'Начало через',
       'Ends in': 'Окончание через',
-      'Participate': 'Принять участие'
+      'Participate': 'Принять участие',
+      'Create a team to participate': 'Создайте команду для участия в игре',
+      'Application request was sent': 'Заявка отправлена на рассмотрение'
     },
   },
 };

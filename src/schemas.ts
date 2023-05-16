@@ -5,6 +5,10 @@ export const createGameSchema = z.object({
   description: z.string(),
 });
 
+export const createTeamSchema = z.object({
+  name: z.string().min(1).max(63)
+})
+
 export const createRoundSchema = z.object({
   game_id: z.string(),
   name: z.string(),
@@ -33,6 +37,11 @@ export type CreateGameError = z.ZodFormattedError<
   z.infer<typeof createGameSchema>,
   string
 >;
+
+export type CreateTeamError = z.ZodFormattedError<
+  z.infer<typeof createTeamSchema>,
+  string
+>
 
 export type CreateRoundError = z.ZodFormattedError<
   z.infer<typeof createRoundSchema>,

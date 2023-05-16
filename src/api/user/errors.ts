@@ -1,5 +1,15 @@
 import { z } from 'zod';
 import { register } from '.';
+import { game } from '../game';
+import { createTeamSchema } from '../../schemas';
+
+export const createTeamError = z
+  .object({ message: z.string() })
+  .transform(
+    ({ message }): z.ZodFormattedError<z.infer<typeof createTeamSchema>, string> => {
+      return { _errors: [message] };
+    }
+  );
 
 export const registerError = z
   .object({ message: z.string() })

@@ -31,6 +31,8 @@ function Game() {
   const team = game.leaderboard?.find((team) => team.is_current_team);
   const [ isAdmin, setIsAdmin ] = useState(false);
 
+  const [newTeamName, setNewTeamName] = useState('');
+
   useEffect(() => {
     console.log(game.participating);
     fetch('/api/1.0.0/user/me', {
@@ -48,7 +50,38 @@ function Game() {
       })
   }, []);
 
-  const enterGame = async () => {
+  const createTeamAndApply = async () => {
+    try {
+      const response = await fetch(`/api/1.0.0/team/application/`, {
+        method: 'POST',
+        body: JSON.stringify({
+          game_id: game.id,
+          team_name: newTeamName
+        }),
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access')}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.status != 200) {
+        alert('Fail with status ' + response.status);
+        return;
+      }
+
+      const data = await response.json();
+      if (data.status_code != 200) {
+        alert('Failed: ' + data.message);
+        return;
+      }
+
+      alert(t('Application request was sent'));
+    } catch (e) {
+      alert(e);
+    }
+  }
+
+  const apply = async () => {
     console.log('here');
     try {
       const response = await fetch(`/api/1.0.0/team/current`, {
@@ -192,10 +225,30 @@ function Game() {
           {t('Delete game')}
         </button>}
         {!game.participating && <button
-          onClick={enterGame}
+          onClick={apply}
           className="mx-1 mt-4 px-3 py-2 rounded-md transition-colors bg-blue-500 hover:bg-blue-600 text-white">
           {t('Participate')}
         </button>}
+      </div>
+      <div className="py-6">
+        <hr />
+        <h1 className="my-4">{t('Create a team to participate')}</h1>
+        <div className="flex flex-row">
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={newTeamName}
+            onChange={(e) => setNewTeamName(e.target.value)}
+            className="block w-full bg-white border-gray-100 border-2"
+            placeholder={t('Team name')}
+          />
+          <button
+            onClick={createTeamAndApply}
+            className="px-3 py-1 mx-3 rounded-md transition-colors bg-blue-500 hover:bg-blue-600 text-white">
+            {t('Apply')}
+          </button>
+        </div>
       </div>
     </motion.div>
   );
